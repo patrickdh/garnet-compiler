@@ -1,0 +1,13 @@
+% This is a test for a comment in Garnet
+% The following test demonstrates proper emission of unchanged keyword tokens
+Expected output: identifiers screen to the correct output token
+div mod or and then else of end do array file packed var type if case while
+% The following test demonstrates proper emission of new Garnet keyword tokens
+Expected output: identifiers screen to the correct output token
+using val def unless elsif break when module
+% The following test demonstrates proper emission of character tokens
+% Expected output: identifiers screen to the correct output character token
+# ! ? $ == !=
+% The following test demonstrate proper Garnet string literals
+% Expected output: emission of pLiteral
+"allowed"

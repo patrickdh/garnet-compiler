@@ -91,13 +91,12 @@
 	pDotDot = 48;
 	pNot = 49;
 	pDoubleEquals = 50;
-	pExclamation = 51;
-	pQuestion = 52;
-	pDollar = 53;
-	pHash = 54;
-	pLeftBrace = 55;
-	pRightBrace = 56;
-	lastSyntaxToken = 56;
+	pQuestion = 51;
+	pDollar = 52;
+	pHash = 53;
+	pLeftBrace = 54;
+	pRightBrace = 55;
+	lastSyntaxToken = 55;
 
 	{ Input/Output Tokens }
 

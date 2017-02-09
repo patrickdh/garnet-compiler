@@ -1,0 +1,40 @@
+** DIFF OF SCAN.SSL FILE IS FOUND IN diff.txt **
+List Of Changes:
+
+	Changes to parser.pt:
+	- broke the parser by modifying the file to execute a while loop and accept any
+		input until the end of file is reached
+	- added the new garnet character classes and semantic tokens to the input tokens and
+		to the output tokens (lines 49 and 94, respectively)
+	- added the new garnet character classes and semantic tokens to the character
+		class map (line 823)
+
+	Changes to scan.ssl:
+	- modified the input declarations
+	- modified the output declarations
+	- modified the Scan rule to read the old PT syntax tokens as pIdentifiers,
+		and to accept the new Garnet syntax tokens, and emit their respective identifiers
+		(e.g. 'not' is emitted as pIdentifier, $ is emitted as pDollar, etc.)
+	- modified the the Comment rule to only read characters after a '%' as a comment
+	- removed the AlterateComment rule
+
+	Changes to stdIdentifiers:
+	- removed the old PT keywords
+	- added the new Garnet keywords
+
+Justification & Explaination of Changes:
+
+	The stdIdentifiers file must be modified to read the new keywords. Additionally, the
+	new keywords must be added to the scan.ssl file in the same order they are added
+	to the stfIdentifiers file.
+
+	The new character classes must be added to both scan.ssl & parser.pt, to be read as
+	syntax tokens.
+	They must be added to parser.pt so the compiler knows what new tokens have specific names
+	(e.g $ is now lDollar & pDollar, ? is now lQuestion & pQuestion, etc.)
+	These new syntax tokens also have to be added to scan.ssl so the Scan rule (the scanner)
+	properly handles each new syntax token. When a new Garnet syntax token is read, the scanner
+	should emit the respective output token (e.g. pPercent). When an old PT syntax token is read,
+	the scanner should emit the pIdentifier token.
+	Additionally, the scanner must handle the Comment input properly for a Garnet comment. This
+	is done by modifiying the Comment rule.

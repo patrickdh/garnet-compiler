@@ -1,0 +1,7 @@
+using output
+
+do
+	x = 6
+	break if true
+	y = 10
+end

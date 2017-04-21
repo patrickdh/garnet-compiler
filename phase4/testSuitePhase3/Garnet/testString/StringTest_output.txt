@@ -1,0 +1,151 @@
+ oSymbolTblPushScope
+ oCountPush(three)
+  oSymbolStkPushLocalIdentifier
+  oSymbolStkSetKind(syVariable)
+  oSymbolStkLinkToStandardType(stdText)
+  oTypeStkPushSymbol
+  oValuePush(two)
+   oAllocateAlignOnWord
+   oSymbolStkEnterDataAddress
+   .tLiteralInteger
+   oEmitValue
+   % value emitted 2
+   .tLiteralAddress
+   oEmitDataAddress
+   % value emitted 0
+   .tFileDescriptor
+   oAllocateDescriptor
+  oSymbolTblEnter
+  oSymbolStkPop
+  oTypeStkPop
+  oValuePop
+ oCountPop
+    oSymbolStkPushLocalIdentifier
+      oSymbolStkPushIdentifier
+     oTypeStkPushSymbol
+     oTypeStkPush(tpNull)
+     oSymbolStkPop
+    oSymbolStkSetKind(syVariable)
+    oTypeStkSwap
+     oSymbolStkEnterDataAddress
+     oAllocateVariable
+    oSymbolStkEnterTypeReference
+    oSymbolTblEnter
+    oSymbolStkPop
+    oTypeStkPop
+    oTypeStkPop
+    oSymbolStkPushLocalIdentifier
+      oSymbolStkPushIdentifier
+     oTypeStkPushSymbol
+     oTypeStkPush(tpNull)
+     oSymbolStkPop
+    oSymbolStkSetKind(syVariable)
+    oTypeStkSwap
+     oAllocateAlignOnWord
+     oSymbolStkEnterDataAddress
+     oAllocateVariable
+    oSymbolStkEnterTypeReference
+    oSymbolTblEnter
+    oSymbolStkPop
+    oTypeStkPop
+    oTypeStkPop
+    oSymbolStkPushLocalIdentifier
+    oSymbolStkSetKind(syConstant)
+    oValuePush(one)
+    oValuePushStringLength
+    oFixPushForwardBranch
+    oEmitNullAddress
+    % value emitted -32767
+    .tLiteralString
+    oEmitValue
+    % value emitted 5
+    oSymbolStkEnterCodeAddress
+    oEmitString
+    % value emitted 72
+    % value emitted 101
+    % value emitted 108
+    % value emitted 108
+    % value emitted 111
+    oFixPopForwardBranch
+    oTypeStkPush(tpPackedArray)
+    oTypeStkEnterBounds
+    oTypeStkLinkToStandardComponentType(stdString)
+    oTypeTblEnter
+    oSymbolStkEnterTypeReference
+    oTypeStkPop
+    oValuePop
+    oValuePop
+    oSymbolTblEnter
+    oSymbolStkPop
+     oSymbolStkPushIdentifier
+     .tAssignBegin
+      .tLiteralAddress
+      oValuePushSymbol
+      oEmitValue
+      % value emitted 4
+      oValuePop
+      oTypeStkPushSymbol
+       oTypeStkSetPackedComponentFlag(no)
+       oValuePush(one)
+       oValuePushStringLength
+       oSymbolStkPush(syExpression)
+       oFixPushForwardBranch
+       oEmitNullAddress
+       % value emitted -32767
+       .tLiteralString
+       oEmitValue
+       % value emitted 8
+       oFixPushTargetAddress
+       oFixSwap
+       oEmitString
+       % value emitted 72
+       % value emitted 105
+       % value emitted 32
+       % value emitted 116
+       % value emitted 104
+       % value emitted 101
+       % value emitted 114
+       % value emitted 101
+       oFixPopForwardBranch
+       oFixPopTargetAddress
+       % value emitted 25
+       oTypeStkPush(tpPackedArray)
+       oTypeStkEnterBounds
+       oTypeStkLinkToStandardComponentType(stdString)
+       oValuePop
+       oValuePop
+      oTypeStkSwap
+     .tAssignString
+     oSymbolStkPop
+     oTypeStkPop
+     oSymbolStkPop
+     oTypeStkPop
+     oSymbolStkPushIdentifier
+     .tAssignBegin
+      .tLiteralAddress
+      oValuePushSymbol
+      oEmitValue
+      % value emitted 1028
+      oValuePop
+      oTypeStkPushSymbol
+       oTypeStkSetPackedComponentFlag(no)
+       oSymbolStkPushIdentifier
+        oTypeStkPushSymbol
+        oValuePushSymbol
+        oEmitValue
+        % value emitted 12
+        oValuePop
+       .tLength
+       oTypeStkPush(tpInteger)
+       oTypeStkSwap
+      oTypeStkSwap
+     .tAssignInteger
+     oSymbolStkPop
+     oTypeStkPop
+     oSymbolStkPop
+     oTypeStkPop
+ oSymbolTblPopScope
+ .tTrapBegin
+ .tTrap
+ oEmitTrapKind(trHalt)
+ % value emitted 0

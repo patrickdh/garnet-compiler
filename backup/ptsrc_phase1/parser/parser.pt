@@ -112,6 +112,7 @@ program ScannerParser(output, stdIdentifiers, scanSsl, parseSsl, source,
 	pType = 13;
 	pIf = 14;
 	pCase = 15;
+  { Changes START }
 	pWhile = 16;
 	pUsing = 17;
 	pVal = 18;
@@ -122,6 +123,7 @@ program ScannerParser(output, stdIdentifiers, scanSsl, parseSsl, source,
 	pWhen = 23;
 	pModule = 24;
   lastKeywordToken = 24;
+  { Changes END }
   { === Compound Tokens === }
 	pIdentifier = 25;
 	firstCompoundInputToken = 25;
@@ -150,6 +152,7 @@ program ScannerParser(output, stdIdentifiers, scanSsl, parseSsl, source,
 	pLeftBracket = 46;
 	pRightBracket = 47;
 	pDotDot = 48;
+  { Changes START }
 	pNot = 49;
 	pDoubleEquals = 50;
 	pQuestion = 51;
@@ -158,6 +161,7 @@ program ScannerParser(output, stdIdentifiers, scanSsl, parseSsl, source,
   pLeftBrace = 54;
   pRightBrace = 55;
 	lastSyntaxToken = 55;
+  { Changes END }
 
 { ===== }
 
@@ -832,11 +836,13 @@ program ScannerParser(output, stdIdentifiers, scanSsl, parseSsl, source,
 	    charClassMap[ord(']')] := lRightBracket;
 	    charClassMap[ord('{')] := lLeftBrace;
 	    charClassMap[ord('}')] := lRightBrace;
+      { Changes START }
 	    charClassMap[ord('%')] := lPercent;
 	    charClassMap[ord('#')] := lHash;
 	    charClassMap[ord('!')] := lExclamation;
 	    charClassMap[ord('?')] := lQuestion;
 	    charClassMap[ord('$')] := lDollar;
+      { Changes END }
 
 	    { Initialize the scan ssl table }
 	    reset(scanSsl {, NscanSsl} );

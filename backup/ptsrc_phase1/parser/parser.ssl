@@ -23,29 +23,32 @@ Input :
 	pMod			'mod'
 	pOr			'or'
 	pAnd			'and'
-	pNot			'not'
 	pThen			'then'
 	pElse			'else'
 	pOf			'of'
 	pEnd			'end'
-	pUntil			'until'
 	pDo			'do'
 	pArray			'array'
 	pFile			'file'
 	pPacked			'packed'
-	pProgram		'program'
-	pConst			'const'
 	pVar			'var'
 	pType			'type'
-	pProcedure		'procedure'
-	pBegin			'begin'
 	pIf			'if'
 	pCase			'case'
 	pWhile			'while'
-	pRepeat			'repeat'
-	lastKeywordToken = pRepeat 
+	% Adding new keywords START
+	pUsing			'using'
+	pVal			'val'
+	pDef			'def'
+	pUnless			'unless'
+	pElsIf			'elsif'
+	pBreak			'break'
+	pWhen			'when'
+	pModule			'module'
+	lastKeywordToken = pModule
+	% Adding new keywords END
 
-	pIdentifier 
+	pIdentifier
 	firstCompoundInputToken = pIdentifier
 	pInteger
 	pLiteral
@@ -56,13 +59,12 @@ Input :
 	pPlus			'+'
 	pMinus			'-'
 	pStar			'*'
-	pColonEquals		':='
 	pDot			'.'
 	pComma			','
 	pSemicolon		';'
 	pColon			':'
 	pEquals			'='
-	pNotEqual		'<>'
+	pNotEqual		'!='
 	pLess			'<'
 	pLessEqual		'<='
 	pGreaterEqual		'>='
@@ -72,10 +74,19 @@ Input :
 	pLeftBracket		'['
 	pRightBracket		']'
 	pDotDot			'..'
-	lastSyntaxToken = pDotDot;
+	% Adding new non-compound tokens START
+	pNot			'!'
+	pDoubleEquals		'=='
+	pQuestion			'?'
+	pDollar			'$'
+	pHash			'#'
+	pLeftBrace		'{'
+	pRightBrace		'}'
+	lastSyntaxToken = pRightBrace;
+	% Adding new non-compound tokens END
 
 Output :
-	sIdentifier 
+	sIdentifier
 	firstSemanticToken = sIdentifier
 	firstCompoundSemanticToken = sIdentifier
 	sInteger
@@ -109,8 +120,15 @@ Output :
 	sThen
 	sElse
 	sWhileStmt
-	sRepeatStmt
-	sRepeatEnd
+	% New semantic output tokens START
+	sPublic
+	sModule
+	sDoStmt
+	sBreakIf
+	sSubstring
+	sLength
+	sIndex
+	% New semantic output tokens END
 	sEq
 	sNE
 	sLT
@@ -134,7 +152,8 @@ Output :
 rules
 
 Program :
-	'program'  .sProgram
+	% Changed program to using
+	'using'  .sProgram
 	% program name
 	pIdentifier
 	% program parameters
@@ -149,15 +168,67 @@ Program :
 	}
 	')'
 	.sParmEnd
-	';'  @Block  '.';
+	@Block
+	.sEnd;
 
+% Added new rule : Routine START
+Routine :
+	'def' 	.sProcedure
+	% routine name with optional public scope
+	[
+		| '*':
+		pIdentifier .sIdentifier
+		.sPublic
+		| pIdentifier
+		.sIdentifier
+	]
+	% routine parameters
+	'('
+	{
+			pIdentifier		.sIdentifier
+			[
+		| ',':
+		|	*:
+				>
+			]
+	}
+	')'
+	.sParmEnd
+	@Block
+	'end'		.sEnd;
+% Added new rule : Routine END
+
+% Added new rule : Module START
+Routine :
+	'module' 	.sModule
+	% module name
+	pIdentifier		.sIdentifier
+	% module parameters
+	'('
+	{
+			pIdentifier		.sIdentifier
+			[
+		| ',':
+		|	*:
+				>
+			]
+	}
+	')'
+	.sParmEnd
+	@Block
+	'end'		.sEnd;
+% Added new rule : Module END
+
+% Redefinition of Block rule START
 Block :
-	% Strictly speaking, standard Pascal requires that declarations
-	% appear only in the order consts, types, vars, procedures.
-	% We allow arbitrary intermixing of these instead to preserve
-	% programmer sanity.
+	@Declarations
+	@Statements;
+% Redefinition of Block rule END
+
+% Added new rule: Declaration START
+Declarations :
 	{[
-	    | 'const':
+		| 'val':
 		.sConst
 		@ConstantDefinitions
 	    | 'type':
@@ -166,17 +237,45 @@ Block :
 	    | 'var':
 		.sVar
 		@VariableDeclarations
-	    | 'procedure':
-		.sProcedure
-		% procedure name
-		pIdentifier  .sIdentifier
-		@ProcedureHeading
-		@Block  ';'
 	    | *:
 		>
 	]}
-	'begin'
-	@BeginStmt;
+	@Statements;
+% Added new rule: Declaration END
+
+% Added new rule: Statements START
+Statements :
+	.sBegin
+	{[
+	    | pIdentifier:
+		@AssignmentOrCallStmt
+	    | 'if':
+		@IfStmt
+	    | 'while':
+		@WhileStmt
+	    | 'case':
+		@CaseStmt
+			| 'unless':
+		@UnlessStmt
+	    | *:
+		.sNullStmt
+		>
+	]}
+% Added new rule: Statements END
+
+% Added new rule: VariableDeclarations START
+VariableDeclarations :
+	% Accept one or more variable declarations.
+	pIdentifier  .sIdentifier
+	{[
+		| ',':
+		pIdentifier  .sIdentifier
+		| ':':
+		@TypeBody
+		| *:
+		>
+	]}
+% Added new rule: Declaration END
 
 ConstantDefinitions :
 	% Accept one or more named constant definitions
@@ -284,52 +383,6 @@ VariableDeclarations :
 		>
 	]};
 
-ProcedureHeading :
-	% Accept zero or more procedure formal parameter declarations.
-	[
-	    | '(':
-		{
-		    % formal parameter identifier
-		    [
-			| 'var':
-			    pIdentifier  .sIdentifier
-			    .sVar
-			| *:
-			    pIdentifier  .sIdentifier
-		    ]
-		    ':'
-		    % type identifier
-		    pIdentifier  .sIdentifier
-		    [
-			| ';':
-			| *:
-			    >
-		    ]
-		}
-		')'
-	    | *:
-	]
-	';'
-	.sParmEnd;
-
-Statement :
-	[
-	    | pIdentifier:
-		@AssignmentOrCallStmt
-	    | 'begin':
-		@BeginStmt
-	    | 'if':
-		@IfStmt
-	    | 'while':
-		@WhileStmt
-	    | 'case':
-		@CaseStmt
-	    | 'repeat':
-		@RepeatStmt
-	    | *:
-		.sNullStmt
-	];
-
 AssignmentOrCallStmt :
 	[
 	    | ':=':
@@ -379,67 +432,58 @@ CallStmt :
 	]
 	.sParmEnd;
 
-BeginStmt :
-	.sBegin
-	{
-	    @Statement
-	    [
-		| ';':
-		| 'end':
-		    .sEnd
-		    >
-	    ]
-	};
-
 IfStmt :
 	.sIfStmt
 	@Expression
 	.sExpnEnd
 	'then'  .sThen
-	@Statement
+	% Changed rule call from Statement to Statements + emission of end token
+	@Statements
+	.sEnd
+	% Added loop logic for Garnet elsif feature
+	{[
+			| 'elsif':
+			.sElse
+			.sBegin
+			@IfStmt
+			.sEnd
+			|	*:
+			>
+	]}
 	[
 	    | 'else':
 		.sElse
-		@Statement
+		% Changed rule call from Statement to Statements
+		@Statements
 	    | *:
-	];
+	]
+	% End if statement with explicit end + emission of end token
+	'end'		.sEnd;
 
+% Modification of Case Rule (for new Garnet syntax) START
 CaseStmt :
 	.sCaseStmt
 	@Expression
 	.sExpnEnd
-	'of'
-	@CaseAlternative
 	{[
-	    | ';':
-		% since case alternatives cannot be null, allow
-		% for the common situation of an extra semicolon
-		% at the end of the list of case alternatives.
-		[
-		    | 'end':
-			>
-		    | *:
-			@CaseAlternative
-		]
-	    | 'end':
+			| 'when':
+		@OptionallySignedIntegerConstant
+		'then'
+		@Statements
+		.sEnd
+			| *:
 		>
 	]}
-	.sCaseEnd;
-
-CaseAlternative :
-	% A case alternative is a statement labelled by
-	% one or more optionally signed integer constants
-
-	{
-	    @OptionallySignedIntegerConstant
-	    [
-		| ',':
+	[
+		|	'else':
+		@Statements
+		.sEnd
 		| *:
-		    >
-	    ]
-	}
-	.sLabelEnd
-	':'  @Statement;
+		>
+	]
+	'end'		.sEnd
+	.sCaseEnd;
+% Modification of Case Rule (for new Garnet syntax) END
 
 WhileStmt :
 	.sWhileStmt
@@ -448,27 +492,26 @@ WhileStmt :
 	'do'
 	@Statement;
 
-RepeatStmt :
-	.sRepeatStmt
-	{
-	    @Statement
-	    [
-		| ';':
-		| 'until':
-		    .sRepeatEnd
-		    >
-	    ]
-	}
+% Added new rule : Unless START
+UnlessStmt :
+	.sIfStmt
 	@Expression
-	.sExpnEnd;
+	.sNot
+	.sExpnEnd
+	'then'  .sThen
+	@Statements
+	'end'		.sEnd;
+% Added new rule : Unless END
 
 Expression :
 	@SimpleExpression
 	[
-	    | '=':
+	% Changes in Expression Rule START
+	    | '==':
 		@SimpleExpression  .sEq
-	    | '<>':
+	    | '!=':
 		@SimpleExpression  .sNE
+	% Changes in Expression Rule END
 	    | '<':
 		@SimpleExpression  .sLT
 	    | '<=':
@@ -524,9 +567,11 @@ Factor :
 		.sInteger
 	    | '(':
 		@Expression  ')'
-	    | 'not':
+		% Changes in Factor START
+	    | '!':
 		@Factor
 		.sNot
+		% Changes in Factor END
 	    | pLiteral:
 		.sLiteral
 	    | 'file':

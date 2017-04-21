@@ -1,0 +1,9 @@
+using output
+
+var w : string
+val y = "Hello"
+val z = " World"
+
+w = y + z
+
+write("Hello world!")

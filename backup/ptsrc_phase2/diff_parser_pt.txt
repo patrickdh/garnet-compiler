@@ -1,0 +1,237 @@
+6c6
+<   Author:  Alan Rosselet
+---
+>   Author:  Alan Rosselet      
+32c32
+< 			     of identifiers in the user program are
+---
+> 			     of identifiers in the user program are 
+78,83c78
+< 	lPercent = 25;
+< 	lHash = 26;
+< 	lExclamation = 27;
+< 	lQuestion = 28;
+< 	lDollar = 29;
+< 	lastCharClass = 29;
+---
+> 	lastCharClass = 24;
+103,138c98,129
+< 	pThen = 4;
+< 	pElse = 5;
+< 	pOf = 6;
+< 	pEnd = 7;
+< 	pDo = 8;
+< 	pArray = 9;
+< 	pFile = 10;
+< 	pPacked = 11;
+< 	pVar = 12;
+< 	pType = 13;
+< 	pIf = 14;
+< 	pCase = 15;
+< 	pWhile = 16;
+<   { Changes START }
+< 	pUsing = 17;
+< 	pVal = 18;
+< 	pDef = 19;
+< 	pUnless = 20;
+< 	pElsif = 21;
+< 	pBreak = 22;
+< 	pWhen = 23;
+< 	pModule = 24;
+<   lastKeywordToken = 24;
+<   { Changes END }
+<   { === Compound Tokens === }
+< 	pIdentifier = 25;
+< 	firstCompoundInputToken = 25;
+< 	pInteger = 26;
+< 	pLiteral = 27;
+< 	lastCompoundInputToken = 27;
+<   { === Non-Compound Tokens === }
+< 	pNewLine = 28;
+< 	pEndFile = 29;
+< 	pPlus = 30;
+< 	pMinus = 31;
+< 	pStar = 32;
+---
+> 	pNot = 4;
+> 	pThen = 5;
+> 	pElse = 6;
+> 	pOf = 7;
+> 	pEnd = 8;
+> 	pUntil = 9;
+> 	pDo = 10;
+> 	pArray = 11;
+> 	pFile = 12;
+> 	pPacked = 13;
+> 	pProgram = 14;
+> 	pConst = 15;
+> 	pVar = 16;
+> 	pType = 17;
+> 	pProcedure = 18;
+> 	pBegin = 19;
+> 	pIf = 20;
+> 	pCase = 21;
+> 	pWhile = 22;
+> 	pRepeat = 23;
+> 	lastKeywordToken = 23;
+> 	pIdentifier = 24;
+> 	firstCompoundInputToken = 24;
+> 	pInteger = 25;
+> 	pLiteral = 26;
+> 	lastCompoundInputToken = 26;
+> 	pNewLine = 27;
+> 	pEndFile = 28;
+> 	pPlus = 29;
+> 	pMinus = 30;
+> 	pStar = 31;
+> 	pColonEquals = 32;
+154,163c145
+<   { Changes START }
+< 	pNot = 48;
+< 	pDoubleEquals = 49;
+< 	pQuestion = 50;
+< 	pDollar = 51;
+< 	pHash = 52;
+<   pLeftBrace = 53;
+<   pRightBrace = 54;
+< 	lastSyntaxToken = 54;
+<   { Changes END }
+---
+> 	lastSyntaxToken = 47;
+206,232c188,207
+<   { New semantic output tokens START }
+<   sPublic = 30;
+<   sModule = 31;
+<   sDoStmt = 32;
+<   sBreakIf = 33;
+<   sSubstring = 34;
+<   sLength = 35;
+<   sIndex = 36;
+<   { New semantic output tokens END }
+< 	sEq = 37;
+< 	sNE = 38;
+< 	sLT = 39;
+< 	sLE = 40;
+< 	sGT = 41;
+< 	sGE = 42;
+< 	sAdd = 43;
+< 	sSubtract = 44;
+< 	sMultiply = 45;
+< 	sDivide = 46;
+< 	sModulus = 47;
+< 	sInfixOr = 48;
+< 	sOr = 49;
+< 	sInfixAnd = 50;
+< 	sAnd = 51;
+< 	sNot = 52;
+< 	sNewLine = 53;
+< 	lastSemanticToken = 53;
+---
+> 	sRepeatStmt = 30;
+> 	sRepeatEnd = 31;
+> 	sEq = 32;
+> 	sNE = 33;
+> 	sLT = 34;
+> 	sLE = 35;
+> 	sGT = 36;
+> 	sGE = 37;
+> 	sAdd = 38;
+> 	sSubtract = 39;
+> 	sMultiply = 40;
+> 	sDivide = 41;
+> 	sModulus = 42;
+> 	sInfixOr = 43;
+> 	sOr = 44;
+> 	sInfixAnd = 45;
+> 	sAnd = 46;
+> 	sNot = 47;
+> 	sNewLine = 48;
+> 	lastSemanticToken = 48;
+297c272
+< 	{ Each assertion in the program is tagged with a unique identifying
+---
+> 	{ Each assertion in the program is tagged with a unique identifying 
+324c299
+< 	numberStdIdentifiers = 44;
+---
+> 	numberStdIdentifiers = 43;
+348c323
+< 	quote = '"';
+---
+> 	quote = '''';
+397c372
+< 	  tokens identifier, integer and literal after their acceptance.
+---
+> 	  tokens identifier, integer and literal after their acceptance. 
+492c467
+< 	{NstdIdentifiers, NscanSsl, NparseSsl,
+---
+> 	{NstdIdentifiers, NscanSsl, NparseSsl, 
+650c625
+< 	var
+---
+> 	var 
+662c637
+< 	    identTokenValue[identReference] :=
+---
+> 	    identTokenValue[identReference] := 
+720c695
+< 			      number of significant characters in
+---
+> 			      number of significant characters in 
+845,851d819
+<       { Changes START }
+< 	    charClassMap[ord('%')] := lPercent;
+< 	    charClassMap[ord('#')] := lHash;
+< 	    charClassMap[ord('!')] := lExclamation;
+< 	    charClassMap[ord('?')] := lQuestion;
+< 	    charClassMap[ord('$')] := lDollar;
+<       { Changes END }
+915c883
+< 	      keywords and predeclared identifiers.  Each identifier
+---
+> 	      keywords and predeclared identifiers.  Each identifier 
+991c959
+< 	    { Convert all identifiers letters to lower case
+---
+> 	    { Convert all identifiers letters to lower case 
+998c966
+< 			textBuffer[i] :=
+---
+> 			textBuffer[i] := 
+1074c1042
+< 			    scanTablePointer :=
+---
+> 			    scanTablePointer := 
+1154c1122
+< 				scanTablePointer :=
+---
+> 				scanTablePointer := 
+1225c1193
+< 
+---
+> 		    
+1235c1203
+< 			    { Set a flag rather than calling Error
+---
+> 			    { Set a flag rather than calling Error 
+1297c1265
+< 	    parseTablePointer :=
+---
+> 	    parseTablePointer := 
+1308c1276
+< 			    parseTablePointer :=
+---
+> 			    parseTablePointer :=  
+1464c1432
+< 	  When a mismatch occurs between the the next input
+---
+> 	  When a mismatch occurs between the the next input 
+1537c1505
+< 	    { If the expected input token is a compound
+---
+> 	    { If the expected input token is a compound 
+1599c1567
+< 				    parseTablePointer :=
+---
+> 				    parseTablePointer := 

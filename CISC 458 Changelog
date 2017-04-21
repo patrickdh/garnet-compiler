@@ -1,0 +1,143 @@
+cisc 458 changelog:
+
+**********! REMEMBER TO REMOVE SEMICOLONS !***********
+
+REMEMBER to explicitly add ('end' .sEnd)
+
+Monday, Feb. 27, 2017:
+- removed .pColonEquals from parser.ssl, parser.pt
+- removed ':=' tokens
+- Added emission of newline token for comments
+- refined comments
+- Changed test suite to include testing for old notEquals
+- Removed OLD PT parse tokens sRepeatStmt, sRepeatEnd (Parser.ssl: lines 112,113 | Parser.pt: lines 	203,204)
+- Removed program, pConst, pProcedure, pBegin, pNot, pUntil, pRepeat from parser.ssl
+- Added pUsing, pVal, pDef, pUnless, pElsif, pBreak, pWhen, pModule to parser.ssl
+- Added each token: pNot, PDoubleEquals, pQuestion, pDollar, pHash, pLeftBrace, pRightBrace in 		parser.ssl
+- Added sPublic, sModule, sDoStmt, sBreakIf, sSubstring, sLength and sIndex to parser.ssl and 		parser.pt
+- Removed Statement Rule, BeginStmt Rule
+- Added and modified VariableDeclarations to take in multiple variables.
+- Removed Repeat Heading, Procedure Headings Rule, Begin Headings from Statements Rule
+- Removed first identifier in Program Rule (Reason: using does not have names)
+- .sEnd emits out of Program rule now instead of Block Rule
+- Added Routine Rule
+- Added Module Rule
+- In Expression Rule, modified sNotEquals to not take '<>'
+- In Factor Rule, changed Not to Exclamation
+- Modified Statements to take in Unless statements rule.
+- Unless is same as if, but removed else clause
+- Modified CaseStmt to perform Garnet case statements, removed CaseAlternative Rule
+- Modified the IfStmt for elsif (did Method 2), added 'elsif' choice and performed if statement 	within.
+
+Tuesday, Feb. 28, 2017:
+- Modified Program, was going into parameters () when it shouldn't have
+- Debugging and removal of semi colons
+- @TypeBody is was modified to take colons
+- Tested Programs, Declarations, Routines, Modules, Statements, Unless, Case
+- Created Do Statement
+- Added String operations
+- Added and modified precedences for program, Created BasicUnit and Substring Rules for precedences
+- Created Garnet programs, and used old and created PT programs to show changes
+
+Thursday, Mar. 9, 2017:
+- added input tokens to tCode input and output tokens to semantic.ssl
+- Replaced every char in semantic.ssl with string
+
+Thursday, Mar. 16, 2017:
+- fixed issues with Phase 2
+semantic.ssl:
+- Added new do loop operations
+- Added definition for string size 1024
+- changed stdChar to stdString in stdType
+- added two new operations to the symbolTableMechanism (find out what they do: StripScope and MergeScope)
+- added syModule kind to the symbolKind table
+- changed tpChar to tpString
+- Trapkind numbers are weird. Changed trap read and write chars to strings
+- Working with understanding the program parameters, removed the choice parameter list and trHalt to create a Module rule
+
+Saturday, Mar. 18, 2017:
+semantic.ssl:
+- ModuleDefinition added
+- removed loop from ConstantDefinitions to take in only one constant at a time
+- removed loop from TypeDefinitions to take in only one type at a time
+- Added multiple indentifier functionality to variableDeclarations
+- Modified ProcedureDefinition to see if procedure is public
+- removed repeat statments and added do statements with else clause
+
+Friday Mar. 24, 2017:
+semantic.ssl
+- tSkipString and tStringDescriptor changed
+
+semantic.pt:
+- changed semantic operations by copy and pasting semantic.def generated code
+- predefined char changed to string
+- changed oAllocateVariable to accept string size of 1024
+- added assertions for syPublicProcedure in syProcedure positions
+- Created oSymbolTableStripScope (same as popscope but does not change symbol table top)
+
+Sunday Mar. 26, 2017
+- rewrote test cases from phase two tests in order to fix reading of semantic tokens
+- performed debugging for each test case
+- created outputs for each test case
+
+semantic.ssl:
+- fixed case statement to accept else
+- fixed string an substring operations
+
+Monday Apr. 10, 2017:
+* removed 858 stuff from solutions
+
+coder.ssl:
+- updated input tokens to correspond to semantic.ssl output
+- updated trap codes (added and updated strings, removed chars)
+- added Datakind "string"
+- added new pruntime.c from original caslab
+- Changed oOperandPushStringDescriptor to oOperandPushString
+- Statements rules contents moved into block rule
+- removed all instances of char, string
+- removed tLiteralChar, tStoreParmChar, tAssignChar, tSubscriptChar added tLiteralString, ...
+
+coder.pt:
+- Symbol definitions updated in coder.pt
+- first compound token and last compound token were not changed
+- in EmitX86StringLiteral procedure
+  - changed the array of i to start at 0
+  - changed i to be initialized to 0
+- in AcceptInputToken procedure
+  - changed the Assert so that the compoundTokenLength is >= 0 instead of 1
+- got rid of all instances of tSkipString and tStringDescriptor (and changed assertions from tStringDescriptor -> tLiteralString)
+
+Tuesday Apr. 11, 2017:
+coder.ssl:
+- moved tFetchString out of tFetchBoolean because it was tFetchChar before. Set operand stack to length of string
+- added tFetchString, tAssignString, tSubscriptString, and tConcatenate modifications
+- modified OperandSubscriptStringPop, follows the flow of the phase 4 instructions.
+- created new rule(s): OperandConcatenatePop, ...
+
+coder.pt
+- in AcceptInputToken procedure
+  - got rid of the assertion since all compoundTokenLengths are valid (>0)
+  - created an if statement to check if the compoundTokenLength is greater than or equal to 1. If it is, read its character, otherwise don't.
+- in EmitX86StringLiteral procedure
+  - created an if statement to check if the compoundTokenLength is greater than or euqal to 1. If it is, write its characters, otherwise don't.
+- removed call to AssertTempsAreAllFree in the oEmitMergeSourceCoordinate semantic operation
+
+Wednesday Apr. 12, 2017:
+* fixed a general errors with instructor's solutions and our phase 4
+coder.ssl:
+- Added scaling of subscript strings to 1024 (created a stringSize variable of 1024)
+- Added all the rules for string operations (step 10)
+
+coder.pt
+- OperandFoldManifestSubscript now has case where it accepts a string size.
+
+Thursday Apr. 13, 2017:
+coder.ssl:
+- Successfully implemented OperandAssignStringPopPop, outputs correct assembly output
+- Modified OperandConcatenatePop, (FORGOT TO ASSIGN IT LOL)
+- Implemented all new rules into coder.ssl
+
+Friday Apr.13, 2017
+- Debugged compiler with garnet test programs from course examples
+- successfully compiled boxes, bubble, bust, double, francais, helloworld, pascal, primes, stars
+- fixed issues with Do Loops,

@@ -1,0 +1,13 @@
+cisc458n@linux1:~/cisc458/phase4$ ./double.out
+Anything you can say, I can say twice (end with 'bye'):
+hello
+hello hello
+we
+we we
+like
+like like
+458
+458 458
+bye
+bye bye
+cisc458n@linux1:~/cisc458/phase4$

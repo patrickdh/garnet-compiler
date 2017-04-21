@@ -1,0 +1,6 @@
+using output
+
+x = "Hi there" $ 1..2
+
+n = #y
+m = ?a

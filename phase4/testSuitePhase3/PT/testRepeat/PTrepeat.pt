@@ -1,0 +1,13 @@
+program foo(input); 
+
+while x<10 do
+begin
+	x = 1;
+end;
+
+repeat
+	x = 1;
+until x = 10;
+ 
+end.
+ 

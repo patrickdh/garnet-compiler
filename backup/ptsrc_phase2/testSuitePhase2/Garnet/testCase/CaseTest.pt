@@ -1,0 +1,14 @@
+using output
+
+val x = 10
+val y = 20
+val w = 30
+
+case i
+when 42 then
+	x = y
+when 43 then
+	y = w
+else
+	w = x
+end

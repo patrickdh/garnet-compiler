@@ -1,0 +1,25 @@
+c76 99
+	pDot = 33;
+	pComma = 34;
+	pSemicolon = 35;
+	pColon = 36;
+	pEquals = 37;
+	pNotEqual = 38;
+	pLess = 39;
+	pLessEqual = 40;
+	pGreaterEqual = 41;
+	pGreater = 42;
+	pLeftParen = 43;
+	pRightParen = 44;
+	pLeftBracket = 45;
+	pRightBracket = 46;
+	pDotDot = 47;
+	pNot = 48;
+	pDoubleEquals = 49;
+	pQuestion = 50;
+	pDollar = 51;
+	pHash = 52;
+	pLeftBrace = 53;
+	pRightBrace = 54;
+	lastSyntaxToken = 54;
+.

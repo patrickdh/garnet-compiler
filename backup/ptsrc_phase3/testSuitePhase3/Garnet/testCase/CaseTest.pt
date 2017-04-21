@@ -1,0 +1,12 @@
+using output
+
+val x = 10
+var y : integer
+var w : integer
+
+case x
+when 10 then
+    y = 10
+else
+    w = 20
+end

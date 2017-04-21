@@ -1,0 +1,146 @@
+ oSymbolTblPushScope
+ oCountPush(three)
+  oSymbolStkPushLocalIdentifier
+  oSymbolStkSetKind(syVariable)
+  oSymbolStkLinkToStandardType(stdText)
+  oTypeStkPushSymbol
+  oValuePush(two)
+   oAllocateAlignOnWord
+   oSymbolStkEnterDataAddress
+   .tLiteralInteger
+   oEmitValue
+   % value emitted 2
+   .tLiteralAddress
+   oEmitDataAddress
+   % value emitted 0
+   .tFileDescriptor
+   oAllocateDescriptor
+  oSymbolTblEnter
+  oSymbolStkPop
+  oTypeStkPop
+  oValuePop
+ oCountPop
+    oSymbolStkPushLocalIdentifier
+    oSymbolStkSetKind(syConstant)
+    oValuePushInteger
+    oSymbolStkLinkToStandardType(stdInteger)
+    oSymbolStkEnterValue
+    oValuePop
+    oSymbolTblEnter
+    oSymbolStkPop
+    oSymbolStkPushLocalIdentifier
+      oSymbolStkPushIdentifier
+     oTypeStkPushSymbol
+     oTypeStkPush(tpNull)
+     oSymbolStkPop
+    oSymbolStkSetKind(syVariable)
+    oTypeStkSwap
+     oAllocateAlignOnWord
+     oSymbolStkEnterDataAddress
+     oAllocateVariable
+    oSymbolStkEnterTypeReference
+    oSymbolTblEnter
+    oSymbolStkPop
+    oTypeStkPop
+    oTypeStkPop
+    oSymbolStkPushLocalIdentifier
+      oSymbolStkPushIdentifier
+     oTypeStkPushSymbol
+     oTypeStkPush(tpNull)
+     oSymbolStkPop
+    oSymbolStkSetKind(syVariable)
+    oTypeStkSwap
+     oAllocateAlignOnWord
+     oSymbolStkEnterDataAddress
+     oAllocateVariable
+    oSymbolStkEnterTypeReference
+    oSymbolTblEnter
+    oSymbolStkPop
+    oTypeStkPop
+    oTypeStkPop
+     .tCaseBegin
+        oSymbolStkPushIdentifier
+         oTypeStkPushSymbol
+         .tLiteralInteger
+         oValuePushSymbol
+         oEmitValue
+         % value emitted 10
+         oValuePop
+      oSymbolStkPop
+      oTypeStkPop
+     oCasePushDisplay
+     oCountPush(zero)
+     .tCaseSelect
+     oFixPushForwardBranch
+     oEmitNullAddress
+     % value emitted -32767
+      oValuePushInteger
+      oCasePushLabel
+      oValuePop
+          oSymbolStkPushIdentifier
+          .tAssignBegin
+           .tLiteralAddress
+           oValuePushSymbol
+           oEmitValue
+           % value emitted 4
+           oValuePop
+           oTypeStkPushSymbol
+            oTypeStkSetPackedComponentFlag(no)
+            oValuePushInteger
+            oSymbolStkPush(syExpression)
+            oTypeStkPush(tpInteger)
+            .tLiteralInteger
+            oEmitValue
+            % value emitted 10
+            oValuePop
+           oTypeStkSwap
+          .tAssignInteger
+          oSymbolStkPop
+          oTypeStkPop
+          oSymbolStkPop
+          oTypeStkPop
+      .tCaseMerge
+      oFixPushForwardBranch
+      oEmitNullAddress
+      % value emitted -32767
+      oFixSwap
+      oCountIncrement
+     .tCaseEnd
+     oFixPopForwardBranch
+     oEmitCaseBranchTable
+     % value emitted 10
+     % value emitted 10
+     % value emitted 16
+     .tCaseElse
+         oSymbolStkPushIdentifier
+         .tAssignBegin
+          .tLiteralAddress
+          oValuePushSymbol
+          oEmitValue
+          % value emitted 8
+          oValuePop
+          oTypeStkPushSymbol
+           oTypeStkSetPackedComponentFlag(no)
+           oValuePushInteger
+           oSymbolStkPush(syExpression)
+           oTypeStkPush(tpInteger)
+           .tLiteralInteger
+           oEmitValue
+           % value emitted 20
+           oValuePop
+          oTypeStkSwap
+         .tAssignInteger
+         oSymbolStkPop
+         oTypeStkPop
+         oSymbolStkPop
+         oTypeStkPop
+     .tCaseMerge
+     oFixPopForwardBranch
+     oCountDecrement
+     oCasePopDisplay
+     oCountPop
+ oSymbolTblPopScope
+ .tTrapBegin
+ .tTrap
+ oEmitTrapKind(trHalt)
+ % value emitted 0

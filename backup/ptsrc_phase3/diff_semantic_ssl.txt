@@ -1,0 +1,683 @@
+10c10
+< %   that information in its symbol and type tables.  It enforces the
+---
+> %   that information in its symbol and type tables.  It enforces the 
+19c19
+< 	sIdentifier
+---
+> 	sIdentifier 
+54,64c54,55
+< 
+< 	% add new input tokens
+< 	sPublic
+< 	sModule
+< 	sDoStmt
+< 	sBreakIf
+< 	sSubstring
+< 	sLength
+< 	sIndex
+< 	% end of new input tokens
+< 
+---
+> 	sRepeatStmt
+> 	sRepeatEnd
+82,83d72
+< 
+< 
+88c77
+< 	tMultiply
+---
+> 	tMultiply 
+113c102
+< 	tFetchString
+---
+> 	tFetchChar
+118c107
+< 	tAssignString
+---
+> 	tAssignChar
+122c111
+< 	tStoreParmString
+---
+> 	tStoreParmChar
+127c116
+< 	tSubscriptString
+---
+> 	tSubscriptChar
+134a124,125
+> 	tRepeatBegin
+> 	tRepeatControl
+144,156d134
+< 	% add new t-codes
+< 	tConcatenate
+< 	tSubstring
+< 	tLength
+< 	tIndex
+< 	tStringEqual
+< 	tDoBegin
+< 	tDoBreakIf
+< 	tDoTest
+< 	tDoEnd
+< 	tCaseElse
+< 	% end of new t-codes
+< 
+158d135
+< 	% Removed tSkipString and tStringDescriptor (not needed for Garnet)
+161a139
+> 	tLiteralChar
+163a142,143
+> 	tStringDescriptor
+> 	tSkipString
+170a151
+> 	tRepeatTest
+181c162
+< 	eDuplicateName
+---
+> 	eDuplicateName 
+207c188
+< 	eStringExpnReqd
+---
+> 	eCharExpnReqd
+217c198
+< 	eStringFileVarReqd
+---
+> 	eCharFileVarReqd
+232,234c213
+< 	wordSize = 4
+< 	% Added stringSize Garnet definition
+< 	stringSize = 1024;
+---
+> 	wordSize = 4;
+244c223
+< 	% This list must be in the exact same order as the
+---
+> 	% This list must be in the exact same order as the 
+251c230
+< 	pidString
+---
+> 	pidChar
+279c258
+< 	stdString
+---
+> 	stdChar
+314c293
+<     oSymbolTblLookupExternal >> Boolean
+---
+>     oSymbolTblLookupExternal >> Boolean;
+318,321d296
+< 		oSymbolTblStripScope
+< 
+< 		oSymbolTblMergeScope;
+< 
+338,341c313
+< 	syUndefined
+< 	% New Garnet symbol kind
+< 	syModule
+< 	syPublicProcedure;
+---
+> 	syUndefined;
+455c427
+< 	% Make a new type table entry with the attributes of the
+---
+> 	% Make a new type table entry with the attributes of the 
+471c443
+< 	tpString
+---
+> 	tpChar
+499c471
+< 	% Push an entry and set its attributes from the type table
+---
+> 	% Push an entry and set its attributes from the type table 
+583a556
+> 	trWriteString = 7
+585c558
+< 	trWriteString = 109
+---
+> 	trWriteChar = 9
+587c560
+< 	trReadString = 108
+---
+> 	trReadChar = 11
+837c810
+< 			oTypeStkPush(tpFile)
+---
+> 			oTypeStkPush(tpFile)		
+860,861d832
+< 			|	sModule:
+< 		@ModuleDefinition
+877,878c848,853
+< 		sIdentifier
+< 		@ConstantValue;
+---
+> 	{[
+> 	    | sIdentifier:
+> 		@ConstantValue
+> 	    | *:
+> 		>
+> 	]};
+941c916
+< 			@SymbolStkPushStringConstant
+---
+> 			@SymbolStkPushCharConstant
+943c918
+< 			oSymbolStkLinkToStandardType(stdString)
+---
+> 			oSymbolStkLinkToStandardType(stdChar)
+948c923
+< 			% .tSkipString
+---
+> 			.tSkipString
+960c935
+< 			oTypeStkLinkToStandardComponentType(stdString)
+---
+> 			oTypeStkLinkToStandardComponentType(stdChar)
+972c947
+< 	[
+---
+> 	{[
+1021c996,998
+< 	];
+---
+> 	    | *:
+> 		>
+> 	]};
+1148,1149c1125,1126
+< 		[
+< 		    | sRange:
+---
+> 		[ 
+> 		    | sRange:	
+1152c1129
+< 			    | syConstant:
+---
+> 			    | syConstant:	
+1155c1132
+< 				    | tpInteger:
+---
+> 				    | tpInteger:	
+1175c1152
+< 		    | *:
+---
+> 		    | *:	
+1359c1336
+< 		    | tpString, tpBoolean:
+---
+> 		    | tpChar, tpBoolean:
+1412,1417c1389
+< 	[
+< 		| sPublic:
+< 			oSymbolStkSetKind(syPublicProcedure)
+< 		| *:
+< 			oSymbolStkSetKind(syProcedure)
+< 	]
+---
+> 	oSymbolStkSetKind(syProcedure)
+1538,1539c1510,1511
+< 			    | tpString:
+< 				.tStoreParmString
+---
+> 			    | tpChar:
+> 				.tStoreParmChar
+1568,1569c1540,1541
+< 	    | sDoStmt:
+< 		@DoStmt
+---
+> 	    | sRepeatStmt:
+> 		@RepeatStmt
+1598,1599c1570,1571
+< 	    | tpString:
+< 		.tAssignString
+---
+> 	    | tpChar:
+> 		.tAssignChar
+1721c1693
+< 	% equal type names.  Check for the special case of a
+---
+> 	% equal type names.  Check for the special case of a 
+1735c1707
+< 		    | tpInteger, tpSubrange, tpString, tpBoolean:
+---
+> 		    | tpInteger, tpSubrange, tpChar, tpBoolean:
+1792a1765,1778
+> RepeatStmt :
+> 	.tRepeatBegin
+> 	oFixPushTargetAddress		% top-of-loop branch target
+> 	{[
+> 	    | sRepeatEnd:
+> 		>
+> 	    | *:
+> 		@Statement
+> 	]}
+> 	.tRepeatControl
+> 	@BooleanControlExpression
+> 	.tRepeatTest
+> 	oFixPopTargetAddress;
+> 
+1803,1805d1788
+< 		.tCaseEnd
+< 		oFixPopForwardBranch
+< 		oEmitCaseBranchTable
+1808,1820c1791
+< 			[
+< 					|	sElse:
+< 						.tCaseEnd
+< 						oFixPopForwardBranch
+< 						oEmitCaseBranchTable
+< 						.tCaseElse
+< 						@Statement
+< 						.tCaseMerge
+< 						sCaseEnd
+< 						>
+< 					| *:
+< 					@CaseAlternative
+< 			]
+---
+> 		@CaseAlternative
+1821a1793,1795
+> 	.tCaseEnd
+> 	oFixPopForwardBranch
+> 	oEmitCaseBranchTable
+1903d1876
+< 			@TernaryOperator
+1951c1924
+< 			oTypeStkPush(tpString)
+---
+> 			oTypeStkPush(tpChar)
+1954,1955c1927,1928
+< 			oTypeStkPush(tpString)
+< 			.tLiteralString
+---
+> 			oTypeStkPush(tpChar)
+> 			.tLiteralChar
+1961c1934
+< 			% .tSkipString
+---
+> 			.tSkipString
+1972c1945
+< 			% .tStringDescriptor
+---
+> 			.tStringDescriptor
+1976c1949
+< 			oTypeStkLinkToStandardComponentType(stdString)
+---
+> 			oTypeStkLinkToStandardComponentType(stdChar)
+1986d1958
+< % Changes made to UnaryOperator rule to include Garnet string index feature
+1995,2007d1966
+< 			| sLength:
+< 		.tLength
+< 		oTypeStkPush(tpInteger)
+< 		oTypeStkSwap
+< 		[	oTypeStkChooseKind
+< 			|	tpString:
+< 			oTypeStkPop
+< 			oSymbolStkPop
+< 			oSymbolStkSetKind(syExpression)
+< 			| *:
+< 			#eTypeMismatch
+< 		]
+< 		>>
+2023,2030c1982,1983
+< 		[	oTypeStkChooseKind
+< 			|	tpInteger:
+< 			oTypeStkPush(tpInteger)	% result type
+< 			@CompareOperandAndResultTypes
+< 			|	tpString:
+< 			oTypeStkPush(tpString)
+< 			@CompareOperandAndResultTypes
+< 		]
+---
+> 		oTypeStkPush(tpInteger)	% result type
+> 		@CompareOperandAndResultTypes
+2077,2097d2029
+< 			| sIndex:
+< 		.tIndex
+< 		oTypeStkPush(tpInteger)
+< 		oTypeStkSwap
+< 		[	oTypeStkChooseKind
+< 			% Both operands must be strings
+< 			| tpString:
+< 			oTypeStkPop
+< 			oTypeStkSwap
+< 			[	oTypeStkChooseKind
+< 				|	tpString:
+< 				oTypeStkPop
+< 				oSymbolStkPop
+< 				oSymbolStkSetKind(syExpression)
+< 				| *:
+< 				#eTypeMismatch
+< 			]
+< 			| *:
+< 			#eTypeMismatch
+< 		]
+< 		>>
+2101,2136d2032
+< % Added new rule to handle ternary operator $ (substring)
+< TernaryOperator :
+< 	[
+< 		| sSubstring:
+< 		.tSubstring
+< 		% Top entry in type stack is string (result)
+< 		oTypeStkPush(tpString)
+< 		% Next entry in type stack should be string (target string for substring)
+< 		oTypeStkSwap
+< 		[	oTypeStkChooseKind
+< 			| tpString:
+< 			oTypeStkPop
+< 			% Next two entries in type stack should be integers (indices of substring)
+< 			oTypeStkSwap % first index on top of stack
+< 			[	oTypeStkChooseKind
+< 				|	tpInteger:
+< 				oTypeStkPop
+< 				oTypeStkSwap % second index on top of stack
+< 				[	oTypeStkChooseKind
+< 					| tpInteger:
+< 					oTypeStkPop
+< 					oSymbolStkPop
+< 					oSymbolStkSetKind(syExpression)
+< 					| *:
+< 					#eTypeMismatch
+< 				]
+< 				| *:
+< 				#eTypeMismatch
+< 			]
+< 			| *:
+< 			#eTypeMismatch
+< 		]
+< 		|*:
+< 	];
+< 
+< 
+2151c2047
+< 	    | tpString:
+---
+> 	    | tpChar:
+2154c2050
+< 		    | tpString:
+---
+> 		    | tpChar:
+2215c2111
+< 	    | tpString:
+---
+> 	    | tpChar:
+2218c2114
+< 		    | tpString:
+---
+> 		    | tpChar:
+2293,2294c2189,2190
+< 		    | tpString:
+< 			.tSubscriptString
+---
+> 		    | tpChar:
+> 			.tSubscriptChar
+2300c2196
+< 		    | tpInteger, tpSubrange, tpString, tpBoolean:
+---
+> 		    | tpInteger, tpSubrange, tpChar, tpBoolean:
+2313,2314c2209,2210
+< 	    | tpString:
+< 		.tLiteralString
+---
+> 	    | tpChar:
+> 		.tLiteralChar
+2318c2214
+< 		% .tStringDescriptor
+---
+> 		.tStringDescriptor
+2332,2333c2228,2229
+< 	    | tpString:
+< 		.tFetchString
+---
+> 	    | tpChar:
+> 		.tFetchChar
+2368c2264
+< 		oTypeStkPush(tpString)
+---
+> 		oTypeStkPush(tpChar)
+2374c2270
+< 			    | tpString:
+---
+> 			    | tpChar:
+2376c2272
+< 				#eStringExpnReqd
+---
+> 				#eCharExpnReqd
+2477c2373
+< 				% There should be only one actual parameter
+---
+> 				% There should be only one actual parameter 
+2560c2456
+< 				.tSubscriptString
+---
+> 				.tSubscriptChar
+2565c2461
+< 			    | tpArray, tpPackedArray:	% must be a char array or literal string
+---
+> 			    | tpArray, tpPackedArray:	% must be a char array or literal string	
+2568c2464
+< 				    | tpString:
+---
+> 				    | tpChar:
+2585,2586c2481,2482
+< 				    | tpPackedArray:	% a literal string
+< 					oValueNegate	% mark as code segment
+---
+> 				    | tpPackedArray:	% a literal string	
+> 					oValueNegate	% mark as code segment	
+2631c2527
+< 				    | tpString:
+---
+> 				    | tpChar:
+2651c2547
+< 						    .tSubscriptString
+---
+> 						    .tSubscriptChar
+2656c2552
+< 					    @WriteString
+---
+> 					    @WriteChar
+2677c2573
+< 					    @WriteNonString
+---
+> 					    @WriteNonChar
+2742c2638
+< 				.tSubscriptString
+---
+> 				.tSubscriptChar
+2747c2643
+< 			@WriteString
+---
+> 			@WriteChar
+2784c2680
+< 			.tSubscriptString
+---
+> 			.tSubscriptChar
+2789c2685
+< 		@WriteString
+---
+> 		@WriteChar
+2793c2689
+< WriteString :
+---
+> WriteChar :
+2818c2714
+< 		    | tpString:
+---
+> 		    | tpChar:
+2831c2727
+< 	    | tpString:
+---
+> 	    | tpChar:
+2833c2729
+< 		oEmitTrapKind(trWriteString)
+---
+> 		oEmitTrapKind(trWriteChar)
+2840c2736
+< 		    | tpString:
+---
+> 		    | tpChar:
+2860c2756
+< WriteNonString :
+---
+> WriteNonChar :
+2941c2837
+< 				    | tpString:
+---
+> 				    | tpChar:
+2948c2844
+< 							#eStringFileVarReqd
+---
+> 							#eCharFileVarReqd
+2952c2848
+< 						#eStringFileVarReqd
+---
+> 						#eCharFileVarReqd
+2956c2852
+< 					#eStringFileVarReqd
+---
+> 					#eCharFileVarReqd
+2962c2858
+< 				#eStringFileVarReqd
+---
+> 				#eCharFileVarReqd
+2966c2862
+< 			#eStringFileVarReqd
+---
+> 			#eCharFileVarReqd
+2974c2870
+< 		#eStringFileVarReqd
+---
+> 		#eCharFileVarReqd
+3009,3010c2905,2906
+< 				    | tpString:
+< 					@ReadStringParameterList
+---
+> 				    | tpChar:
+> 					@ReadCharParameterList
+3012c2908
+< 					@ReadNonStringParameterList
+---
+> 					@ReadNonCharParameterList
+3050c2946
+< 			@ReadString
+---
+> 			@ReadChar
+3056c2952
+< 				@ReadStringParameterList
+---
+> 				@ReadCharParameterList
+3066c2962
+< ReadStringParameterList :
+---
+> ReadCharParameterList :
+3088c2984
+< 		@ReadString
+---
+> 		@ReadChar
+3107c3003
+< ReadNonStringParameterList :
+---
+> ReadNonCharParameterList :
+3129c3025
+< 		@ReadNonString
+---
+> 		@ReadNonChar
+3148c3044
+< ReadString :
+---
+> ReadChar :
+3150c3046
+< 	    | tpString:
+---
+> 	    | tpChar:
+3152c3048
+< 		oEmitTrapKind(trReadString)
+---
+> 		oEmitTrapKind(trReadChar)
+3162c3058
+< ReadNonString :
+---
+> ReadNonChar :
+3229c3125
+< 				    | tpString:
+---
+> 				    | tpChar:
+3236c3132
+< 							#eStringFileVarReqd
+---
+> 							#eCharFileVarReqd
+3240c3136
+< 						#eStringFileVarReqd
+---
+> 						#eCharFileVarReqd
+3244c3140
+< 					#eStringFileVarReqd
+---
+> 					#eCharFileVarReqd
+3249c3145
+< 				#eStringFileVarReqd
+---
+> 				#eCharFileVarReqd
+3253c3149
+< 			#eStringFileVarReqd
+---
+> 			#eCharFileVarReqd
+3261c3157
+< 		#eStringFileVarReqd
+---
+> 		#eCharFileVarReqd
+3278c3174
+< 	% Boolean control expressions occur in IF, WHILE and DO statements.
+---
+> 	% Boolean control expressions occur in IF, WHILE and REPEAT statements.
+3314c3210
+< SymbolStkPushStringConstant :
+---
+> SymbolStkPushCharConstant :
+3319c3215
+< 	oSymbolStkLinkToStandardType(stdString);
+---
+> 	oSymbolStkLinkToStandardType(stdChar);
+3358,3399d3253
+< 
+< % New Garnet Rules
+< ModuleDefinition :
+< 
+< 	sIdentifier  oSymbolStkPushLocalIdentifier	% module name
+< 	.tSkipProc	% Branch around the procedure definition
+< 	oFixPushForwardBranch
+< 	oEmitNullAddress
+< 	oSymbolStkSetKind(syModule)
+< 	oSymbolStkEnterCodeAddress
+< 	oTypeStkPush(tpNull)
+< 	oTypeTblEnter
+< 	oSymbolStkEnterTypeReference
+< 	oSymbolTblEnter
+< 	oSymbolTblPushScope
+< 	@Block
+< 	.tProcedureEnd
+< 	oFixPopForwardBranch	% fix skip around procedure
+< 	oSymbolTblUpdate
+< 	oSymbolStkPop
+< 	oTypeTblUpdate
+< 	oTypeStkPop
+< 	oSymbolTblStripScope
+< 	oSymbolTblMergeScope;
+< 
+< DoStmt:
+< 	.tDoBegin
+< 	oFixPushTargetAddress		% top-of-loop branch target
+< 	sBegin
+< 	@BeginStmt
+< 	sBreakIf
+< 	.tDoBreakIf
+< 	@BooleanControlExpression
+< 	.tDoTest
+< 	oFixPushForwardBranch
+< 	oEmitNullAddress		% exit branch
+< 	oFixSwap		% top-of-loop target back on top
+< 	sBegin
+< 	@BeginStmt
+< 	.tDoEnd
+< 	oFixPopTargetAddress
+< 	oFixPopForwardBranch;

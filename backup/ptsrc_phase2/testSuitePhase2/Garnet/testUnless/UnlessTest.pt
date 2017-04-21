@@ -1,0 +1,23 @@
+using output
+
+val c = 27
+var v : string
+type t : integer 
+
+var w,x,y,z : integer
+
+w = 8
+x = 10
+y = 10
+z = 5
+
+if x == y then
+	z = w
+else
+	z = 1
+end
+
+unless x == y then
+	z = w
+end
+

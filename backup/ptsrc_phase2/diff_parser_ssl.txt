@@ -1,0 +1,475 @@
+25a26
+> 	pNot			'not'
+29a31
+> 	pUntil			'until'
+33a36,37
+> 	pProgram		'program'
+> 	pConst			'const'
+35a40,41
+> 	pProcedure		'procedure'
+> 	pBegin			'begin'
+39,49c45,46
+< 	% Adding new keywords START
+< 	pUsing			'using'
+< 	pVal			'val'
+< 	pDef			'def'
+< 	pUnless			'unless'
+< 	pElsIf			'elsif'
+< 	pBreak			'break'
+< 	pWhen			'when'
+< 	pModule			'module'
+< 	lastKeywordToken = pModule
+< 	% Adding new keywords END
+---
+> 	pRepeat			'repeat'
+> 	lastKeywordToken = pRepeat 
+51c48
+< 	pIdentifier
+---
+> 	pIdentifier 
+61a59
+> 	pColonEquals		':='
+64c62
+< 	pSemicolon
+---
+> 	pSemicolon		';'
+67c65
+< 	pNotEqual		'!='
+---
+> 	pNotEqual		'<>'
+77,86c75
+< 	% Adding new non-compound tokens START
+< 	pNot			'!'
+< 	pDoubleEquals		'=='
+< 	pQuestion			'?'
+< 	pDollar			'$'
+< 	pHash			'#'
+< 	pLeftBrace		'{'
+< 	pRightBrace		'}'
+< 	lastSyntaxToken = pRightBrace;
+< 	% Adding new non-compound tokens END
+---
+> 	lastSyntaxToken = pDotDot;
+89c78
+< 	sIdentifier
+---
+> 	sIdentifier 
+123,131c112,113
+< 	% New semantic output tokens START
+< 	sPublic
+< 	sModule
+< 	sDoStmt
+< 	sBreakIf
+< 	sSubstring
+< 	sLength
+< 	sIndex
+< 	% New semantic output tokens END
+---
+> 	sRepeatStmt
+> 	sRepeatEnd
+155,156c137
+< 	% Changed program to using
+< 	'using'  .sProgram
+---
+> 	'program'  .sProgram
+158,174c139,140
+< 	pIdentifier .sIdentifier
+< 	.sParmEnd
+< 	@Block
+< 	.sEnd;
+< 
+< % Added new rule : Routine START
+< Routine :
+< 	.sProcedure
+< 	% routine name with optional public scope
+< 	[
+< 		| '*':
+< 		pIdentifier .sIdentifier
+< 		.sPublic
+< 		| pIdentifier:
+< 		.sIdentifier
+< 	]
+< 	% routine parameters
+---
+> 	pIdentifier
+> 	% program parameters
+176,179c142,144
+< 	{[
+< 		| pIdentifier:
+< 		.sIdentifier
+< 		':' @TypeBody
+---
+> 	{
+> 	    pIdentifier  .sIdentifier
+> 	    [
+181,183c146,149
+< 		|	*:
+< 				>
+< 	]}
+---
+> 		| *:
+> 		    >
+> 	    ]
+> 	}
+186,197c152
+< 	@Block
+< 	'end'		.sEnd;
+< % Added new rule : Routine END
+< 
+< % Added new rule : Module START
+< Module :
+< 	.sModule
+< 	% module name
+< 	pIdentifier		.sIdentifier
+< 	@Block
+< 	'end'		.sEnd;
+< % Added new rule : Module END
+---
+> 	';'  @Block  '.';
+199d153
+< % Redefinition of Block rule START
+201,206c155,158
+< 	@Declarations
+< 	@Statements;
+< % Redefinition of Block rule END
+< 
+< % Added new rule: Declaration START
+< Declarations :
+---
+> 	% Strictly speaking, standard Pascal requires that declarations
+> 	% appear only in the order consts, types, vars, procedures.
+> 	% We allow arbitrary intermixing of these instead to preserve
+> 	% programmer sanity.
+208c160
+< 		| 'val':
+---
+> 	    | 'const':
+216a169,174
+> 	    | 'procedure':
+> 		.sProcedure
+> 		% procedure name
+> 		pIdentifier  .sIdentifier
+> 		@ProcedureHeading
+> 		@Block  ';'
+219,259c177,179
+< 	]};
+< % Added new rule: Declaration END
+< 
+< % Added new rule: Statements START
+< Statements :
+< 	.sBegin
+< 	{[
+< 	    | pIdentifier:
+< 		@AssignmentOrCallStmt
+< 	    | 'if':
+< 		@IfStmt
+< 	    | 'while':
+< 		@WhileStmt
+< 	    | 'case':
+< 		@CaseStmt
+< 			| 'unless':
+< 		@UnlessStmt
+< 			| 'def':
+< 		@Routine
+< 			| 'module':
+< 		@Module
+< 			| 'do':
+< 		@DoStmt
+< 	    | *:
+< 		>
+< 	]};
+< % Added new rule: Statements END
+< 
+< % Added new rule: VariableDeclarations START
+< VariableDeclarations :
+< 	% Accept one or more variable declarations.
+< 	pIdentifier  .sIdentifier
+< 	{[
+< 		| ',':
+< 		.sVar 	pIdentifier  .sIdentifier
+< 		| ':':
+< 		@TypeBody
+< 		| *:
+< 		>
+< 	]};
+< % Added new rule: Declaration END
+---
+> 	]}
+> 	'begin'
+> 	@BeginStmt;
+264c184
+< 	@ConstantValue
+---
+> 	@ConstantValue ';'
+268c188
+< 		@ConstantValue
+---
+> 		@ConstantValue ';'
+300c220,227
+< 	':'  @TypeBody;
+---
+> 	'='  @TypeBody  ';'
+> 	{[
+> 	    | pIdentifier:
+> 		.sIdentifier
+> 		'='  @TypeBody  ';'
+> 	    | *:
+> 		>
+> 	]};
+347a275,332
+> VariableDeclarations :
+> 	% Accept one or more variable declarations.
+> 	pIdentifier  .sIdentifier
+> 	':'  @TypeBody  ';'
+> 	{[
+> 	    | pIdentifier:
+> 		.sIdentifier
+> 		':'  @TypeBody  ';'
+> 	    | *:
+> 		>
+> 	]};
+> 
+> ProcedureHeading :
+> 	% Accept zero or more procedure formal parameter declarations.
+> 	[
+> 	    | '(':
+> 		{
+> 		    % formal parameter identifier
+> 		    [
+> 			| 'var':
+> 			    pIdentifier  .sIdentifier
+> 			    .sVar
+> 			| *:
+> 			    pIdentifier  .sIdentifier
+> 		    ]
+> 		    ':'
+> 		    % type identifier
+> 		    pIdentifier  .sIdentifier
+> 		    [
+> 			| ';':
+> 			| *:
+> 			    >
+> 		    ]
+> 		}
+> 		')'
+> 	    | *:
+> 	]
+> 	';'
+> 	.sParmEnd;
+> 
+> Statement :
+> 	[
+> 	    | pIdentifier:
+> 		@AssignmentOrCallStmt
+> 	    | 'begin':
+> 		@BeginStmt
+> 	    | 'if':
+> 		@IfStmt
+> 	    | 'while':
+> 		@WhileStmt
+> 	    | 'case':
+> 		@CaseStmt
+> 	    | 'repeat':
+> 		@RepeatStmt
+> 	    | *:
+> 		.sNullStmt
+> 	];
+> 
+350c335
+< 	    | '=':
+---
+> 	    | ':=':
+361c346
+< 		']'  '='
+---
+> 		']'  ':='
+396a382,393
+> BeginStmt :
+> 	.sBegin
+> 	{
+> 	    @Statement
+> 	    [
+> 		| ';':
+> 		| 'end':
+> 		    .sEnd
+> 		    >
+> 	    ]
+> 	};
+> 
+402,414c399
+< 	% Changed rule call from Statement to Statements + emission of end token
+< 	@Statements
+< 	.sEnd
+< 	% Added loop logic for Garnet elsif feature
+< 	{[
+< 			| 'elsif':
+< 			.sElse
+< 			.sBegin
+< 			@IfStmt
+< 			.sEnd
+< 			|	*:
+< 			>
+< 	]}
+---
+> 	@Statement
+418,419c403
+< 		% Changed rule call from Statement to Statements
+< 		@Statements
+---
+> 		@Statement
+421,423c405
+< 	]
+< 	% End if statement with explicit end + emission of end token
+< 	'end'		.sEnd;
+---
+> 	];
+425d406
+< % Modification of Case Rule (for new Garnet syntax)
+429a411,412
+> 	'of'
+> 	@CaseAlternative
+431,436c414,424
+< 			| 'when':
+< 		@OptionallySignedIntegerConstant
+< 		'then'
+< 		@Statements
+< 		.sEnd
+< 			| *:
+---
+> 	    | ';':
+> 		% since case alternatives cannot be null, allow
+> 		% for the common situation of an extra semicolon
+> 		% at the end of the list of case alternatives.
+> 		[
+> 		    | 'end':
+> 			>
+> 		    | *:
+> 			@CaseAlternative
+> 		]
+> 	    | 'end':
+439,442c427,436
+< 	[
+< 		|	'else':
+< 		@Statements
+< 		.sEnd
+---
+> 	.sCaseEnd;
+> 
+> CaseAlternative :
+> 	% A case alternative is a statement labelled by
+> 	% one or more optionally signed integer constants
+> 
+> 	{
+> 	    @OptionallySignedIntegerConstant
+> 	    [
+> 		| ',':
+444,445c438,442
+< 	]
+< 	'end'		.sCaseEnd;
+---
+> 		    >
+> 	    ]
+> 	}
+> 	.sLabelEnd
+> 	':'  @Statement;
+452c449
+< 	@Statements;
+---
+> 	@Statement;
+454,456c451,461
+< % Added new rule : Unless
+< UnlessStmt :
+< 	.sIfStmt
+---
+> RepeatStmt :
+> 	.sRepeatStmt
+> 	{
+> 	    @Statement
+> 	    [
+> 		| ';':
+> 		| 'until':
+> 		    .sRepeatEnd
+> 		    >
+> 	    ]
+> 	}
+458,473c463
+< 	.sNot
+< 	.sExpnEnd
+< 	'then'  .sThen
+< 	@Statements
+< 	'end'		.sEnd;
+< 
+< % Added new rule : Do
+< DoStmt :
+< 	.sDoStmt
+< 	@Statements		.sEnd
+< 	'break'		'if'
+< 	.sBreakIf
+< 	@Expression
+< 	.sExpnEnd
+< 	@Statements		.sEnd
+< 	'end'		.sEnd;
+---
+> 	.sExpnEnd;
+478,479c468
+< 	% Changes in Expression Rule START
+< 	    | '==':
+---
+> 	    | '=':
+481c470
+< 	    | '!=':
+---
+> 	    | '<>':
+483d471
+< 	% Changes in Expression Rule END
+523c511
+< 		@Factor		.sModulus
+---
+> 		@Factor  .sModulus
+526,527d513
+< 			| '?':
+< 		@Factor		.sIndex
+533,548d518
+< 	@BasicUnit
+< 	{[
+< 		% Changes in Factor START
+< 	    | '!':
+< 		@BasicUnit
+< 		.sNot
+< 			| '#':
+< 		@BasicUnit
+< 		.sLength
+< 		% Changes in Factor END
+< 			| *:
+< 		>
+< 	]};
+< 
+< % Added new rule/precedence level : BasicUnit
+< BasicUnit :
+553,557d522
+< 		[
+< 			| '$':
+< 			@SubString
+< 			|	*:
+< 		]
+561a527,529
+> 	    | 'not':
+> 		@Factor
+> 		.sNot
+564,568d531
+< 		[
+< 			| '$':
+< 			@SubString
+< 			|	*:
+< 		]
+572d534
+< 			| *:
+574,581d535
+< 
+< % Added new rule : Substring
+< SubString :
+< 	pInteger		.sInteger
+< 	'..'
+< 	pInteger		.sInteger
+< 	.sSubstring;
+< 

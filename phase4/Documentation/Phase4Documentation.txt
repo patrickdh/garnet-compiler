@@ -1,0 +1,68 @@
+List Of Changes:
+
+general:
+- used Dr. Cordy's Phase 3 solution
+  - changed semantic.ssl and semantic.pt to align tokens with the parser
+
+coder.ssl:
+- updated input tokens to correspond to semantic.ssl output
+- updated trap codes (added and updated strings, removed chars)
+- added Datakind "string"
+- added new pruntime.c from original caslab
+- Changed oOperandPushStringDescriptor to oOperandPushString
+- Statements rules contents moved into block rule
+- removed all instances of char, string
+- removed tLiteralChar, tStoreParmChar, tAssignChar, tSubscriptChar added tLiteralString, ...
+- moved tFetchString out of tFetchBoolean because it was tFetchChar before. Set operand stack to length of string
+- added tFetchString, tAssignString, tSubscriptString, and tConcatenate modifications
+- modified OperandSubscriptStringPop, follows the flow of the phase 4 instructions.
+- created new rule(s): OperandConcatenatePop, OperandSubstringPopPop ...
+- Added scaling of subscript strings to 1024 (created a stringSize variable of 1024)
+- Added all the rules for string operations (step 10)
+- Successfully implemented OperandAssignStringPopPop, outputs correct assembly output
+- Modified OperandConcatenatePop
+- Implemented all new rules into coder.ssl
+
+coder.pt:
+- Symbol definitions updated in coder.pt
+- first compound token and last compound token were not changed
+- in EmitX86StringLiteral procedure
+  - changed the array of i to start at 0
+  - changed i to be initialized to 0
+- in AcceptInputToken procedure
+  - changed the Assert so that the compoundTokenLength is >= 0 instead of 1
+- got rid of all instances of tSkipString and tStringDescriptor (and changed assertions from tStringDescriptor -> tLiteralString)
+- in AcceptInputToken procedure
+  - got rid of the assertion since all compoundTokenLengths are valid (>0)
+  - created an if statement to check if the compoundTokenLength is greater than or equal to 1. If it is, read its character, otherwise don't.
+- in EmitX86StringLiteral procedure
+  - created an if statement to check if the compoundTokenLength is greater than or euqal to 1. If it is, write its characters, otherwise don't.
+- removed call to AssertTempsAreAllFree in the oEmitMergeSourceCoordinate semantic operation
+- OperandFoldManifestSubscript now has case where it accepts a string size.
+
+Justification & Explanation of Changes:
+
+  Due to the lateness of obtaining Phase 3 feedback, the team decided to use Dr. Cordy's solution.
+
+  Changes in this phase are implemented in coder.ssl and coder.pt.
+
+  Code generation phase input token list were changed to correspond to the set of tokens emitted
+  by the Garnet semantic phase output T-code list. New trap codes were added and unused trap codes
+  were deleted.
+
+  String handling was the major component of this phase in modifying PT code generation into Garnet.
+  Strings in Garnet are significantly different than PT since they are now built-in types to replace
+  the old PT char. Therefore, most of the character operations/rules were removed (aside from rules
+  that Booleans rely on). To implement the string type, correct machine instructions must be generated.
+  Templates were given by Dr. Cordy for machine instructions to implement string assignment, string
+  concatenation, string routine parameter handling, substrings, string indices, string length, and
+  string comparisons. Changes had to be made in coder.ssl to handle the rules, and coder.pt to
+  handle proper string size allocation.
+
+  Do-statement handling was another component of this phase. Do statements was implemented referencing the
+  implementation of the while-statement, except that the boolean control expression is NOT flipped (like
+  it does in the while statement rule). Statements are also allowed before and after break if statement.
+
+  Case-else statement handling was another component of this phase. Else statements are not a feature
+  in PT and had to be implemented for Garnet. To do this, a simple check for tCaseElse was required
+  in the EmitDefaultCaseAbort rule to accept statements and then consuming a tCaseMerge once completed.

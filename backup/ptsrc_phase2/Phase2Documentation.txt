@@ -1,0 +1,83 @@
+List Of Changes:
+
+	- 'repaired' the parser from phase 1 to its original state
+	
+	- removed .pColonEquals from parser.ssl, parser.pt
+	- removed ':=' tokens
+	- Added emission of newline token for comments
+	- refined comments
+	- Changed test suite to include testing for old notEquals
+	
+	- Removed OLD PT parse tokens sRepeatStmt, sRepeatEnd (Parser.ssl: lines 112,113 | Parser.pt: lines 203,204)
+	- Removed program, pConst, pProcedure, pBegin, pNot, pUntil, pRepeat from parser.ssl
+	- Added pUsing, pVal, pDef, pUnless, pElsif, pBreak, pWhen, pModule to parser.ssl
+	- Added each token: pNot, PDoubleEquals, pQuestion, pDollar, pHash, pLeftBrace, pRightBrace in parser.ssl
+	- Added sPublic, sModule, sDoStmt, sBreakIf, sSubstring, sLength and sIndex to parser.ssl and parser.pt
+	
+	- Removed Statement Rule, BeginStmt Rule
+	- Added and modified VariableDeclarations to take in multiple variables.
+	
+	- Removed Repeat Heading, Procedure Headings Rule, Begin Headings from Statements Rule
+	- Removed first identifier in Program Rule (Reason: using does not have names)
+	- .sEnd emits out of Program rule now instead of Block Rule
+	
+	- Added Routine Rule
+	- Added Module Rule
+	- In Expression Rule, modified sNotEquals to not take '<>'
+	- In Factor Rule, changed Not to Exclamation
+	
+	- Modified Statements to take in Unless statements rule.
+	- Unless is same as if, but removed else clause
+	
+	- Modified CaseStmt to perform Garnet case statements, removed CaseAlternative Rule
+	- Modified the IfStmt for elsif (did Method 2), added 'elsif' choice and performed if statement 
+	- Modified Program, removed ()
+	
+	- Removed any ';' inputs
+	- @TypeBody was modified to take colons
+	- Created Do Statement rule
+	- Added String operations $, #, ?
+	- Added and modified precedences for program, Created BasicUnit and Substring Rules for precedences
+
+Justification & Explaination of Changes:
+
+	The parser has been modified to handle the new Garnet way of dealing with Programs, Declarations,
+	Routines (Procedures), Modules, Statements (if, unless, case, do), Elsif, and the String type.
+	
+	Each new Garnet token must be read by the scanner and interpreted by the parser.
+	Most of the changes in this phase are implemented in parser.ssl. 
+	
+	Program is modified to read as input the Garnet keyword 'using', then read a sequence of Declarations 
+	followed by a sequence of Statements. These declarations and statements are handeled by a new rule, 
+	called 'Block'.
+	Declarations and Statements handle the Garnet keywords by executing case operations ( [ .. ] in ssl )
+	to take as input the declarations ('val', 'type', and 'var') and the statements ( 'if', 'while', 'case',
+	'unless', 'def', 'module', and 'do').
+	
+	The statements for Garnet emit to output the existing Pascal sBegin and sEnd tokens to make the semantic 
+	phase work.
+	
+	Routines in Garnet correspond to Procedures in Pascal. The Procedures rule is changed slightly to accept
+	the new Garnet keyword 'def'. Additionaly, public routines operate the same way, but additionally emit 
+	the sPublic token when the '*' is read as input. 
+	
+	Modules in Garnet handle a sequence of declarations and statments, similar to how Program does. Thus the 
+	module rule is written by simply calling the Block rule, as Program does. 
+	
+	Unless is a keyword in Garnet which corresponds to 'if not'. The parser deals with this by using the existing
+	expression rule for if statements, but emits an additional sNot token to the output stream. 
+	
+	Case statements in Garnet are written quite differently than Pascal. The CaseStmt rule is modified to read
+	as input 'when' and 'then' keywords.
+	
+	Elsif is a new keyword. We implemented Elsif without using any new semantic tokens. The IfStmt rule is modified
+	by adding a choice loop to read in the 'elsif' keyword, then recursively calling the IfStmt rule to handle 
+	additional if else statements.
+	
+	Do statements are modified to work with the new Garnet 'break if' keyword. The sBreakIf output token is emitted
+	when 'break if' is read as input.
+	
+	Finally, the string type is modified to handle the new string operations substring ($), length (#), and index (?).
+	A new level of precedence is added to handle the Garnet precedence. We call this new high precedence 'BasicUnit'.
+	BasicUnit is nested in the lowest part of the SimpleExpression, Term, Factor precedence tree. 
+	

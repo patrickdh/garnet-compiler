@@ -1,0 +1,20 @@
+program p (output);
+	
+const c = 27;
+var v: string;
+type t = integer;
+
+const w = 8;
+	x = 10;
+	y = 10;
+	z = 5;
+
+begin
+    i := 42;
+    b := true;
+    if (b) then 
+    begin
+        t := 32;
+    end;
+    c := '4';
+end.

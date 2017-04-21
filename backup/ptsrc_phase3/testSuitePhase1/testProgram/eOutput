@@ -1,0 +1,11 @@
+ .pNewLine
+  .pIdentifier
+ .pLeftParen
+  .pLiteral
+ .pRightParen
+ .pSemicolon
+  .pIdentifier
+ .pLeftParen
+ .pRightParen
+ .pNewLine
+ .pEndFile

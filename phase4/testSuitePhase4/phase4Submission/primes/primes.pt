@@ -1,0 +1,68 @@
+% this program determines the primes up to maxprimes using the sieve method 
+using output
+
+val maxprimes = 100
+val maxfactor = 50	% maxprimes div 2
+
+val prime = true
+val notprime = false
+
+module flags 
+    var flagvector : array [1 .. maxprimes] of boolean
+
+    def * flagset (f : integer, tf : boolean) 
+	flagvector [f] = tf
+    end
+
+    def * flag (f : integer, var rslt : boolean) 
+	rslt = flagvector [f]
+    end
+
+    % everything begins as prime
+    var i : integer
+    i = 1
+    while i <= maxprimes do
+	flagvector [i] = prime
+	i = i + 1
+    end
+end
+
+
+% pick out multiples of each prime factor and set these to notprime 
+var nextfactor : integer
+var multiple, factor : integer
+var yes : boolean
+
+multiple = 2
+factor = 2
+
+while factor <= maxfactor do
+
+    % set multiples of factor to notprime 
+    multiple = factor + factor
+    while multiple <= maxprimes do
+	flagset (multiple, notprime)
+	multiple = multiple + factor
+    end
+
+    % set factor = next prime 
+    nextfactor = factor + 1
+    flag (nextfactor, yes)
+    while (nextfactor <= maxprimes) and (! yes) do
+	nextfactor = nextfactor + 1
+        flag (nextfactor, yes)
+    end
+    factor = nextfactor
+end
+
+% not report the results
+write ("The primes up to ", maxprimes:1, " are:"); writeln ()
+nextfactor = 2
+while nextfactor <= maxprimes do
+    flag (nextfactor, yes)
+    if yes then
+	write (nextfactor:5)
+    end
+    nextfactor = nextfactor + 1
+end
+writeln ()

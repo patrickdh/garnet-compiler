@@ -1,0 +1,11 @@
+using output
+
+val x = 5
+val y = 6
+var z: integer
+
+if x == y then
+    z = 3
+else
+    z = 4
+end

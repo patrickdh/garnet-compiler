@@ -1,0 +1,10 @@
+using output
+
+var y : integer
+var x : integer
+
+do
+    x = 100
+    break if x == 15
+    x = y
+end

@@ -1,0 +1,604 @@
+%  PT Parser.ssl	v1.01
+%
+% Date:  30 Jun 1980
+%	 (revised 7 December 2009)
+%
+% Author:  Alan Rosselet
+%
+% Abstract
+%
+%     This module parses the syntax token stream emitted by the scanner
+%   and emits a postfix stream of tokens to the semantic analyzer
+%   module.  The parser detects and repairs syntax errors so that the
+%   token stream emitted to the semantic analyzer is syntactically
+%   legal (except for the special case of declaration phase errors - see
+%   comment in the Block routine below).
+
+Input :
+	% Keywords must be first both here and in stdIdentifiers,
+	% and they must appear in the same order
+
+	pDiv			'div'
+	firstKeywordToken = pDiv
+	pMod			'mod'
+	pOr			'or'
+	pAnd			'and'
+	pThen			'then'
+	pElse			'else'
+	pOf			'of'
+	pEnd			'end'
+	pDo			'do'
+	pArray			'array'
+	pFile			'file'
+	pPacked			'packed'
+	pVar			'var'
+	pType			'type'
+	pIf			'if'
+	pCase			'case'
+	pWhile			'while'
+	% Adding new keywords START
+	pUsing			'using'
+	pVal			'val'
+	pDef			'def'
+	pUnless			'unless'
+	pElsIf			'elsif'
+	pBreak			'break'
+	pWhen			'when'
+	pModule			'module'
+	lastKeywordToken = pModule
+	% Adding new keywords END
+
+	pIdentifier
+	firstCompoundInputToken = pIdentifier
+	pInteger
+	pLiteral
+	lastCompoundInputToken = pLiteral
+
+	pNewLine
+	pEndFile
+	pPlus			'+'
+	pMinus			'-'
+	pStar			'*'
+	pDot			'.'
+	pComma			','
+	pSemicolon	';'
+	pColon			':'
+	pEquals			'='
+	pNotEqual		'!='
+	pLess			'<'
+	pLessEqual		'<='
+	pGreaterEqual		'>='
+	pGreater		'>'
+	pLeftParen		'('
+	pRightParen		')'
+	pLeftBracket		'['
+	pRightBracket		']'
+	pDotDot			'..'
+	% Adding new non-compound tokens START
+	pNot			'!'
+	pDoubleEquals		'=='
+	pQuestion			'?'
+	pDollar			'$'
+	pHash			'#'
+	lastSyntaxToken = pHash;
+	% Adding new non-compound tokens END
+
+Output :
+	sIdentifier
+	firstSemanticToken = sIdentifier
+	firstCompoundSemanticToken = sIdentifier
+	sInteger
+	sLiteral
+	lastCompoundSemanticToken = sLiteral
+
+	sProgram
+	sParmBegin
+	sParmEnd
+	sConst
+	sType
+	sVar
+	sProcedure
+	sBegin
+	sEnd
+	sNegate
+	sArray
+	sPacked
+	sFile
+	sRange
+	sCaseStmt
+	sCaseEnd
+	sLabelEnd
+	sExpnEnd
+	sNullStmt
+	sAssignmentStmt
+	sSubscript
+	sCallStmt
+	sFieldWidth
+	sIfStmt
+	sThen
+	sElse
+	sWhileStmt
+	% New semantic output tokens START
+	sPublic
+	sModule
+	sDoStmt
+	sBreakIf
+	sSubstring
+	sLength
+	sIndex
+	% New semantic output tokens END
+	sEq
+	sNE
+	sLT
+	sLE
+	sGT
+	sGE
+	sAdd
+	sSubtract
+	sMultiply
+	sDivide
+	sModulus
+	sInfixOr
+	sOr
+	sInfixAnd
+	sAnd
+	sNot
+	sNewLine
+	lastSemanticToken = sNewLine;
+
+
+rules
+
+Program :
+	% Changed program to using
+	'using'  .sProgram
+	% program name
+	pIdentifier .sIdentifier
+	{[
+		| ',':
+		pIdentifier	.sIdentifier
+		| *:
+		>
+	]}
+	.sParmEnd
+	@Block;
+
+% Added new rule : Routine START
+Routine :
+	.sProcedure
+	% routine name with optional public scope
+	[
+		| '*':
+		pIdentifier .sIdentifier
+		.sPublic
+		| pIdentifier:
+		.sIdentifier
+	]
+	% routine parameters
+	'('
+	[
+		|	')':
+		|	*:
+		{
+			[
+				| 'var':
+				pIdentifier .sIdentifier
+				.sVar
+				| pIdentifier:
+				.sIdentifier
+			]
+			':' @TypeBody
+			[
+				|	',':
+				|	')':
+				>
+			]
+		}
+	]
+	.sParmEnd
+	@Block;
+% Added new rule : Routine END
+
+% Added new rule : Module START
+Module :
+	.sModule
+	% module name
+	pIdentifier		.sIdentifier
+	@Block;
+% Added new rule : Module END
+
+% Redefinition of Block rule START
+Block :
+	@Declarations
+	@Statements;
+% Redefinition of Block rule END
+
+% Added new rule: Declaration START
+Declarations :
+	{[
+			| 'val':
+		.sConst
+		@ConstantDefinitions
+	    | 'type':
+		.sType
+		@TypeDefinitions
+	    | 'var':
+		.sVar
+		@VariableDeclarations
+			| 'def':
+		@Routine
+			| 'module':
+		@Module
+			|	';':
+		.sNullStmt
+	    | *:
+		>
+	]};
+% Added new rule: Declaration END
+
+% Added new rule: Statements START
+Statements :
+	.sBegin
+	{[
+	    | pIdentifier:
+		@AssignmentOrCallStmt
+	    | 'if':
+		@IfStmt
+	    | 'while':
+		@WhileStmt
+	    | 'case':
+		@CaseStmt
+			| 'unless':
+		@UnlessStmt
+			| 'do':
+		@DoStmt
+			|	';':
+		.sNullStmt
+	    | *:
+		>
+	]}
+	[
+			| 'end':
+		.sEnd
+			| *:
+		.sEnd
+	];
+% Added new rule: Statements END
+
+% Added new rule: VariableDeclarations START
+VariableDeclarations :
+	% Accept one or more variable declarations.
+	pIdentifier  .sIdentifier
+	{[
+		| ',':
+		.sVar 	pIdentifier  .sIdentifier
+		| *:
+		>
+	]}
+	':'	@TypeBody;
+% Added new rule: Declaration END
+
+ConstantDefinitions :
+	% Accept one or more named constant definitions
+	pIdentifier  .sIdentifier
+	@ConstantValue;
+
+ConstantValue :
+	'='
+	[
+	    | pInteger:
+		.sInteger
+	    | pIdentifier:
+		.sIdentifier
+	    | '-':
+		@UnsignedIntegerConstant
+		.sNegate
+	    | '+':
+		@UnsignedIntegerConstant
+	    | pLiteral:
+		.sLiteral
+	];
+
+UnsignedIntegerConstant :
+	[
+	    | pIdentifier:
+		.sIdentifier
+	    | pInteger:
+		.sInteger
+	];
+
+TypeDefinitions :
+	% Accept one or more named type definitions.
+	pIdentifier  .sIdentifier
+	':'  @TypeBody;
+
+TypeBody :
+	[
+	    | 'packed':
+		'array'  .sArray  .sPacked
+		'['  @SimpleType  ']'
+		'of'  @SimpleType
+	    | 'array':
+		.sArray
+		'['  @SimpleType  ']'
+		'of'  @SimpleType
+	    | 'file':
+		.sFile
+		'of'  @SimpleType
+	    | *:
+		@SimpleType
+	];
+
+SimpleType :
+	% A simple type is a named type (possibly predefined)
+	% or a subrange type specification
+	[
+	    | pIdentifier:
+		.sIdentifier
+		[
+		    | '..':
+			.sRange		%% this may be unnecessary
+			@OptionallySignedIntegerConstant
+		    | *:
+		]
+	    | *:
+		@OptionallySignedIntegerConstant
+		'..'  .sRange
+		@OptionallySignedIntegerConstant
+	];
+
+OptionallySignedIntegerConstant :
+	[
+	    | '-':
+		@UnsignedIntegerConstant
+		.sNegate
+	    | '+':
+		@UnsignedIntegerConstant
+	    | *:
+		@UnsignedIntegerConstant
+	];
+
+AssignmentOrCallStmt :
+	[
+	    | '=':
+		.sAssignmentStmt
+		.sIdentifier	% identifier accepted in the Statement rule
+		@Expression
+		.sExpnEnd
+	    | '[':
+		.sAssignmentStmt
+		.sIdentifier
+		.sSubscript
+		@Expression
+		.sExpnEnd
+		']'  '='
+		@Expression
+		.sExpnEnd
+	    | *:
+		@CallStmt
+	];
+
+CallStmt :
+	.sCallStmt
+	.sIdentifier	% procedure identifier accepted in the Statement rule
+	% accept zero or more actual parameters
+%%%%%%%%%%% CHANGED
+%	[
+%	    | '(':
+%%%%%%%%%%%
+	'('
+	[
+	    | ')':
+	    | *:
+%%%%%%%%%%%
+		{
+		    @Expression
+		    .sExpnEnd
+		    % allow a field width specification to occur in calls
+		    % to the standard procedures write and writeln
+		    [
+			| ':':
+			    .sFieldWidth
+			    @Expression
+			    .sExpnEnd
+			| *:
+		    ]
+		    [
+			| ',':
+			| *:
+			    >
+		    ]
+		}
+		')'
+%%%%%%%%%%% CHANGED
+%	   | *:	% no actual parameters
+%       ]
+%%%%%%%%%%%
+	]
+%%%%%%%%%%% 
+	.sParmEnd;
+
+IfStmt :
+	.sIfStmt
+	@Expression
+	.sExpnEnd
+	'then'  .sThen
+	% Changed rule call from Statement to Statements + emission of end token
+	@Statements
+	% Added loop logic for Garnet elsif feature
+	[
+			| 'elsif':
+			.sElse
+			.sBegin
+			@IfStmt
+			.sEnd
+	    | 'else':
+			.sElse
+			% Changed rule call from Statement to Statements
+			@Statements
+			|	*:
+	];
+
+% Modification of Case Rule (for new Garnet syntax)
+CaseStmt :
+	.sCaseStmt
+	@Expression
+	.sExpnEnd
+	{[
+			| 'when':
+		@OptionallySignedIntegerConstant
+		'then'
+		.sLabelEnd
+		@Statements
+			| *:
+		>
+	]}
+	[
+		|	'else':
+		.sElse
+		@Statements
+		| *:
+	]
+	.sCaseEnd;
+
+WhileStmt :
+	.sWhileStmt
+	@Expression
+	.sExpnEnd
+	'do'
+	@Statements;
+
+% Added new rule : Unless
+UnlessStmt :
+	.sIfStmt
+	@Expression
+	.sNot
+	.sExpnEnd
+	'then'  .sThen
+	@Statements;
+
+% Added new rule : Do
+DoStmt :
+	.sDoStmt
+	@Statements
+	'break'		'if'
+	.sBreakIf
+	@Expression
+	.sExpnEnd
+	@Statements;
+
+Expression :
+	@SimpleExpression
+	[
+	% Changes in Expression Rule START
+	    | '==':
+		@SimpleExpression  .sEq
+	    | '!=':
+		@SimpleExpression  .sNE
+	% Changes in Expression Rule END
+	    | '<':
+		@SimpleExpression  .sLT
+	    | '<=':
+		@SimpleExpression  .sLE
+	    | '>':
+		@SimpleExpression  .sGT
+	    | '>=':
+		@SimpleExpression  .sGE
+	    | *:
+	];
+
+SimpleExpression :
+	[
+	    | '+':
+		@Term
+	    | '-':
+		@Term  .sNegate
+	    | *:
+		@Term
+	]
+	{[
+	    | '+':
+		@Term  .sAdd
+	    | '-':
+		@Term  .sSubtract
+	    | 'or':
+		.sInfixOr  @Term  .sOr
+	    | *:
+		>
+	]};
+
+Term :
+	@Factor
+	{[
+	    | '*':
+		@Factor  .sMultiply
+	    | 'div':
+		@Factor  .sDivide
+	    | 'mod':
+		@Factor		.sModulus
+	    | 'and':
+		.sInfixAnd  @Factor  .sAnd
+			| '?':
+		@Factor		.sIndex
+	    | *:
+		>
+	]};
+
+Factor :
+	@BasicUnit
+	{[
+			| '$':
+		@BasicUnit	'..'	@BasicUnit	.sSubstring
+			| *:
+		>
+	]};
+
+% Added new rule/precedence level : BasicUnit
+BasicUnit :
+	[
+	    | pIdentifier:
+		.sIdentifier
+		@IdentifierExtension
+	    | pInteger:
+		.sInteger
+	    | '(':
+		@Expression  ')'
+	    | pLiteral:
+		.sLiteral
+		% Changes in Factor START
+	    | '!':
+		@BasicUnit
+		.sNot
+			| '#':
+		@BasicUnit
+		.sLength
+		% Changes in Factor END
+	    | 'file':
+		.sFile '(' @Expression ')'
+		.sExpnEnd
+	];
+
+% Added new rule : Substring
+SubString :
+	pInteger		.sInteger
+	'..'
+	pInteger		.sInteger
+	.sSubstring;
+
+
+IdentifierExtension :
+	% Handle subscripts and function actual parameter lists
+	[
+	    | '[':
+		.sSubscript
+		@Expression  ']'
+		.sExpnEnd
+	    | '(':
+		.sParmBegin
+		@Expression  ')'
+		.sExpnEnd
+		.sParmEnd
+	    | *:
+	];
+
+end

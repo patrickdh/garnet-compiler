@@ -1,0 +1,9 @@
+using output
+
+var x : integer
+val y = 20
+
+x = 0
+while x > 3 do
+    x = x + 1
+end

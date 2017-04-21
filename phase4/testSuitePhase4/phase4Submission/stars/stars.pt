@@ -1,0 +1,13 @@
+% print a triangle of stars
+using output
+
+var stars: string
+var i: integer
+
+i = 1
+stars = ""
+while i <= 50 do
+    stars = "*" + stars
+    write (stars); writeln ()
+    i = i + 1
+end

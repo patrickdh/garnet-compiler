@@ -1,0 +1,83 @@
+List Of Changes:
+
+general:
+- rewrote test cases from phase two tests in order to fix reading of semantic tokens
+- performed debugging for each test case
+- created outputs for each test case
+
+parser.ssl (Phase 2 fixes):
+- removed pLeftBrace and pRightBrace
+- Statements rule fixed to efficiently emit pEnd token
+- loop in IfStmt rule is removed
+- Program rule fixed for multiple program parameters
+- null declaration ';' accepted for null statements
+- Modules and Routines rules fixed to be accepted in declarations
+- Constant declarations fixed to accept only one in a single statement
+- Routine parameters fixed to accept vars
+- Variable declaration rule fixed to disallow for multiple colons and typebodies as well as potentially no typebody at all
+- CaseStmt rule emits sLabel end after a when
+- Substring precedence fixed
+
+semantic.ssl:
+- added input tokens to tCode input and output tokens to semantic.ssl
+- Replaced every char in semantic.ssl with string
+
+- Added new do loop operations
+- Added definition for string size 1024
+- changed stdChar to stdString in stdType
+- added two new operations to the symbolTableMechanism (find out what they do: StripScope and MergeScope)
+- added syModule kind to the symbolKind table
+- changed tpChar to tpString
+- Trapkind numbers are weird. Changed trap read and write chars to strings
+- Working with understanding the program parameters, removed the choice parameter list and trHalt to create a Module rule
+
+- removed loop from ConstantDefinitions to take in only one constant at a time
+- removed loop from TypeDefinitions to take in only one type at a time
+- Added multiple indentifier functionality to variableDeclarations
+- Modified ProcedureDefinition to see if procedure is public
+- removed repeat statments and added do statements with else clause
+
+- tSkipString and tStringDescriptor changed
+
+- fixed case statement to accept else
+- fixed string an substring operations
+
+semantic.pt:
+- changed semantic operations by copy and pasting semantic.def generated code
+- predefined char changed to string
+- changed oAllocateVariable to accept string size of 1024
+- added assertions for syPublicProcedure in syProcedure positions
+- Created oSymbolTableStripScope (same as popscope but does not change symbol table top)
+
+Justification & Explanation of Changes:
+
+  The comments of phase 2 were addressed in parser.ssl. Most of the changes were made in reference
+  with Dr. Cordy's solution. This was essential in making phase 3 function properly.
+
+  Changes in this phase are implemented in semantic.ssl and semantic.pt.
+
+  Semantic phase input token list were changed to correspond to the set of tokens emitted
+  by the Garnet parser and semantic phase output T-code list to include the new Garnet
+  T-codes used in the next phase.
+
+  Module is modified to implement public routines. Public routines introduce a new symbol kind,
+  syPublicProcedure. To implement public routines, new semantic mechanism operations are added
+  to the Symbol Table. These new operations are oSymbolTblStripScope and oSymbolTblMergeScope.
+  oSymbolTblStripScope is used to make symbols inside the module invisible. oSymbolTblMergeScope
+  is used to make public procedures visible (after calling oSymbolTblStripScope)
+
+  oSymbolTblStripScope is implemented in semantic.pt, which was implemented referencing the implementation
+  of oSymbolTblPopScope expect is does not decrement the lexical level.
+  oSymbolTblMergeScope is implemented in semantic.pt, which simply decrements the lexical level.
+
+  String is a new type in Garnet, replacing PT's char type. Storage allocation for a String
+  is 1024. String constants now allocate a variable and assign the string to that variable.
+
+  Because Elsif was implemented without a new semantic token, no changes were needed for its implementation
+
+  Do statements are implemented similarly to while statements of PT. Do statements allow for statements,
+  followed by a break if statements, and optional statements following.
+
+  The CaseStmt rule is modified to handle Garnet's usage of case and when statements. In the CaseStmt rule,
+  there is an addition of a case selector for optional 'else' statements, proceeding at least one 'when'
+  statement. tCaseElse is a new t-code for this feature.

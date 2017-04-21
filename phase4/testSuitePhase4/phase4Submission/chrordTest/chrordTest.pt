@@ -1,0 +1,24 @@
+using output
+var s: string
+var n: integer
+s = "a"
+
+n = 97
+
+if chr(n) == s then
+    write ("works"); writeln ()
+end
+
+if ord(s) == n then
+    write ("works"); writeln ()
+end
+
+n = 50
+
+if chr(n) != s then
+    write ("works") writeln ()
+end
+
+if ord(s) != n then    
+    write ("works"); writeln ()
+end

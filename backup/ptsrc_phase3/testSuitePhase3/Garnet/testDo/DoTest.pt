@@ -1,0 +1,8 @@
+using output
+
+val y = 20
+
+do
+    y = 15
+    break if y == 15
+end

@@ -1,0 +1,13 @@
+using output
+
+module M
+	val x = 10
+	val y = 20
+	val w = 30
+	var z : integer
+	if x == y then
+		z = w
+	else
+		z = 1
+	end
+end

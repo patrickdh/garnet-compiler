@@ -1,0 +1,15 @@
+ .pLeftBrace
+  .pIdentifier
+ .pNewLine
+  .pIdentifier
+ .pRightBrace
+ .pNewLine
+ .pLeftParen
+ .pStar
+  .pIdentifier
+ .pNewLine
+  .pIdentifier
+ .pStar
+ .pRightParen
+ .pNewLine
+ .pEndFile

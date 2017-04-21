@@ -1,0 +1,1 @@
+The following test demonstrates the removal of PT's 'program' and general declarations/statements. (i.e., emitted semantic tokens should not make sense with relation to the program)

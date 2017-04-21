@@ -1,0 +1,16 @@
+cisc458n@linux1:~/cisc458/phase4$ ./francais.out
+Please give me a regular French 'er' verb (end with 'arreter')
+dancer
+Thanks, here is the present conjugation
+The root of this verb is 'danc'
+Je dance
+Tu dances
+Il ou elle dance
+
+Nous dancons
+Vous dancez
+Ils ou elles dancent
+
+Please give me a regular French 'er' verb (end with 'arreter')
+^C
+cisc458n@linux1:~/cisc458/phase4$

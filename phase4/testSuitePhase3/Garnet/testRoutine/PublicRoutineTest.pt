@@ -1,0 +1,15 @@
+using output
+
+def * P (a:integer, b:integer)
+    var z : integer
+    val x = 10
+    val y = 20
+    val w = 30
+
+    if x == y then
+        z = w
+    else
+        z = 1
+    end
+
+end

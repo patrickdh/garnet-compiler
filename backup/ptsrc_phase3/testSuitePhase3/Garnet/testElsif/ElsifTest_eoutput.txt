@@ -1,0 +1,41 @@
+make: Entering directory `/cas/student/cisc458n/cisc458/ptsrc/semantic'
+/bin/cp semantic.out semantic.sst semantic.def ../lib/pt
+make: Leaving directory `/cas/student/cisc458n/cisc458/ptsrc/semantic'
+   .tLiteralInteger
+   oEmitValue
+   .tLiteralAddress
+   oEmitDataAddress
+   .tFileDescriptor
+     .tIfBegin
+        .tLiteralInteger
+        oEmitValue
+        .tEQ
+     .tIfThen
+     oEmitNullAddress
+         .tAssignBegin
+           .tLiteralInteger
+           oEmitValue
+         .tAssignInteger
+     .tIfMerge
+     oEmitNullAddress
+         .tIfBegin
+            .tLiteralInteger
+            oEmitValue
+            .tEQ
+         .tIfThen
+         oEmitNullAddress
+             .tAssignBegin
+               .tLiteralInteger
+               oEmitValue
+             .tAssignInteger
+         .tIfMerge
+         oEmitNullAddress
+             .tAssignBegin
+               .tLiteralInteger
+               oEmitValue
+             .tAssignInteger
+         .tIfEnd
+     .tIfEnd
+ .tTrapBegin
+ .tTrap
+ oEmitTrapKind(trHalt)

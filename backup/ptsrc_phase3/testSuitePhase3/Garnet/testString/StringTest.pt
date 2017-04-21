@@ -1,0 +1,10 @@
+using output
+
+var w :string
+var x : integer
+val y = "Hello"
+
+w = "Hi there"
+x = #y
+
+end

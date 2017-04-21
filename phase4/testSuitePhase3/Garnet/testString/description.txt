@@ -1,0 +1,3 @@
+The following test demonstrates proper emission of semantic tokens for the new Garnet 'string' type.
+
+NOTE: we keep getting assert34 from our sLiteral operations in our Operand and ConstantValue rules in semantic.ssl. We are running through the operation but were not able to find out why it was asserting 34.
